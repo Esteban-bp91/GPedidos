@@ -1,6 +1,11 @@
-package controlStock;
+package clases;
 
-import java.time.LocalDate;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 
 
@@ -22,7 +27,7 @@ public class Cliente {
 
 	private String nombre;
 	private String apellidos;
-	private LocalDate FechaDeAlta;
+	private Date FechaDeAlta;   // LocalDate para recoger datos del cliente por consola. Date para recoger datos del cliente por fichero
 	private int telefono;
 	private String direccion;
 	private String historial;
@@ -46,17 +51,30 @@ public class Cliente {
 		this.apellidos = apellidos;
 	}
 
-	public LocalDate getFechaDeAlta() {
+	/**
+	 * Método setFechaDeAlta para recoger datos del cliente por consola
+	 * 
+	 * public LocalDate getFechaDeAlta() {
+		return FechaDeAlta;
+	}
+	*/
+	
+	public Date getFechaDeAlta() {    
 		return FechaDeAlta;
 	}
 
-	public void setFechaDeAlta(LocalDate fechaDeAlta) {
-		FechaDeAlta = fechaDeAlta;
+	public void setFechaDeAlta(Date date) {  // Método setFechaDeAlta para recoger datos del cliente por fichero
+		FechaDeAlta = date;
 	}
 
-	public void setFechaDeAlta() {
+	/**
+	 * 
+	 * Método setFechaDeAlta para recoger la fecha del cliente por consola
+	 * 
+	 * public void setFechaDeAlta() {
 		FechaDeAlta = LocalDate.now();
 	}
+	*/
 
 	public int getTelefono() {
 		return telefono;
@@ -88,7 +106,7 @@ public class Cliente {
 		this.historial = historial;
 	}
 
-	/** Constructor de Cliente
+	/** Constructor de Cliente para recoger datos del cliente por consola
 	 * @param nombre
 	 * @param apellidos
 	 * @param fechaDeAlta
@@ -96,7 +114,29 @@ public class Cliente {
 	 * @param direccion
 	 * @param historial
 	 */
-	public Cliente(String nombre, String apellidos, LocalDate fechaDeAlta, int telefono, String direccion,
+	/**
+	 * public Cliente(String nombre, String apellidos, LocalDate fechaDeAlta, int telefono, String direccion,
+	 
+			String historial) {
+		this.nombre = nombre;
+		this.apellidos = apellidos;
+		this.FechaDeAlta = fechaDeAlta;
+		this.telefono = telefono;
+		this.direccion = direccion;
+		this.historial = historial;
+	}
+	*/
+	
+	/** Constructor de Cliente para recoger datos del cliente por fichero
+	 * @param nombre
+	 * @param apellidos
+	 * @param fechaDeAlta
+	 * @param telefono
+	 * @param direccion
+	 * @param historial
+	 */
+	 public Cliente(String nombre, String apellidos, Date fechaDeAlta, int telefono, String direccion,
+	 
 			String historial) {
 		this.nombre = nombre;
 		this.apellidos = apellidos;
@@ -159,8 +199,49 @@ public class Cliente {
 	
 	// Método rellenarCliente sirve para rellenar los atributos del cliente
 	
-	public void rellenarCliente(Cliente cliente) {
+	public void rellenarCliente(String ruta, Cliente cliente) throws FileNotFoundException, IOException, ParseException {
 		
+		File f = new File(ruta);
+		Scanner s;
+		try {
+			s = new Scanner(f);
+			String linea = s.nextLine();
+			Scanner sl = new Scanner(linea);
+			sl.useDelimiter("\\s*;\\s*");
+			cliente.setNombre(sl.next().toLowerCase());
+			cliente.setApellidos(sl.next().toUpperCase());
+				
+			String fecha = sl.next();  // Recogemos la fecha en este String para poder parsear a Date
+			System.out.println(fecha);
+			
+			SimpleDateFormat dma = new SimpleDateFormat("dd/MM/yyyy");
+			Date date = (Date)dma.parse(fecha);  			    
+			cliente.setFechaDeAlta(date);
+			
+			System.out.println(cliente.getFechaDeAlta());
+				
+			String telf = sl.next(); // Recogemos el teléfono en este String para poder parsear a int
+			int telefono = Integer.parseInt(telf);
+			cliente.setTelefono(telefono);
+				
+			cliente.setDireccion(sl.next());
+							
+			cliente.setHistorial("0");
+
+			s.close();
+			sl.close();
+			
+		} catch (FileNotFoundException e) {
+			// PrintWriter pw = null;
+			e.printStackTrace();
+			// e.printStackTrace(pw);
+
+		}
+		
+		
+
+		
+		/** Código anterior para recoger los datos del cliente por consola
 		Scanner sc = new Scanner(System.in);
 		
 		System.out.println("Nombre del cliente:");
@@ -187,6 +268,8 @@ public class Cliente {
 		 cliente.getFechaDeAlta() + " Telefono: " + cliente.getTelefono() +
 		 " Direccion: " + cliente.getDireccion() + " Historial: " +
 		 cliente.getHistorial());
+		 
+		 */
 		
 	}
 

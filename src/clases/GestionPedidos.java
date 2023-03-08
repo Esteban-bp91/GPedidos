@@ -1,7 +1,15 @@
-package controlStock;
+package clases;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.text.ParseException;
 import java.time.LocalDate;
+import java.time.Year;
+import java.util.ArrayList;
 import java.util.Scanner;
+
+import herramientas.Ficheros;
 
 /**
  * Clase main GestionPedidos de la practica 4 de Programación
@@ -17,8 +25,7 @@ import java.util.Scanner;
 
 public class GestionPedidos {
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+	public static void main(String[] args) throws FileNotFoundException, IOException, ParseException{
 		
 		// Atributos necesarios del main
 		
@@ -27,7 +34,7 @@ public class GestionPedidos {
 		int cantidad1 = 0;
 		Producto prod2 = null;
 		int cantidad2 = 0;
-		Cliente cli;
+		Cliente cli = null;
 		Pedido pedido;
 		double impor = 0;
 		double importeTotal;
@@ -40,87 +47,72 @@ public class GestionPedidos {
 		
 		// Creamos los 3 clientes y 5 productos sin atributos
 		
-		Cliente cliente1 = new Cliente(); 
-		Cliente cliente2 = new Cliente(); 
-		Cliente cliente3 = new Cliente(); 
+		ArrayList<Cliente> clientes = new ArrayList<Cliente>(); //ArrayList para guardar los clientes 
 		
-		Producto producto1 = new Producto(); 
-		Producto producto2 = new Producto(); 
-		Producto producto3 = new Producto(); 
-		Producto producto4 = new Producto(); 
-		Producto producto5 = new Producto(); 
+		
+		//Creamos un array con los archivos txt con los datos de los clientes y así saber la cantidad de clientes que hay 
+		
+		File carpetaClientes = new File("C:/Users/EstebanBP/Desktop/DAW/ENTORNOS DE DESARROLLO/GestionPedidos/Clientes"); 
+		File[] listaClientes = carpetaClientes.listFiles(); 
 		
 
-		// Rellenamos los 3 clientes diferentes con el método rellenarCliente (nombre, apellidos, fecha, telefono, direccion,
+		// Rellenamos los clientes con el método rellenarCliente (nombre, apellidos, fecha, telefono, direccion,
 			// historial)
-
-	
-		 // Cliente 1
 		
-		System.out.println("\nRellena los datos del Cliente 1");
-		 
-		cliente1.rellenarCliente(cliente1);
-		 
-		 // Cliente 2
-		 
-		System.out.println("\nRellena los datos del Cliente 2");
-		 
-		cliente2.rellenarCliente(cliente2);
-		
-		 
-		while (cliente2.getTelefono() == cliente1.getTelefono()) {
-			System.out.println(
-						"El telefono de cliente 2 debe ser diferente al telefono de cliente 1. \nEscriba de nuevo el telefono de cliente 2: ");
-			cliente2.setTelefono(sc.nextInt());
-		 }
-		 
-		 // Cliente 3
-		
-		System.out.println("\nRellena los datos del Cliente 3");
-		 
-		 cliente3.rellenarCliente(cliente3);
-		 
-			//Comprobamos que el telefono sea diferente al resto de clientes
-		 
-		 while (cliente3.getTelefono() == cliente1.getTelefono() || cliente3.getTelefono() == cliente2.getTelefono()) {
-			 System.out.println(
-						"El telefono de cliente 3 debe ser diferente al telefono de cliente 1 y 2. \nEscriba de nuevo el telefono de cliente 3: ");
-			 cliente3.setTelefono(sc.nextInt());
-		 }
 
-
-
-			// Rellenamos los datos de los 5 productos diferentes con el método rellenarProducto (nombre, precio, stock)
+		for (int i = 0; i < listaClientes.length; i++) {   // Bucle for para crear tantos clientes como archivos tenga la carpeta Clientes y asignar la ruta de su respectivo archivo
 			
-			 // Producto 1
-		 
-		System.out.println("\nRellena los datos del Producto 1");
+		// Cliente i
+			
+			clientes.add(new Cliente());
+				
+			System.out.println("\nRellena los datos del Cliente "+i);
+			
+			String ruta = "C:/Users/EstebanBP/Desktop/DAW/ENTORNOS DE DESARROLLO/GestionPedidos/Clientes/Cliente"+i+".txt";
 			 
-		 producto1.rellenarProducto(producto1);
-			 
-			 // Producto 2
-		 
-		System.out.println("\nRellena los datos del Producto 2");
-			 
-		 producto2.rellenarProducto(producto2);
-			 
-			 // Producto 3
-		 
-		System.out.println("\nRellena los datos del Producto 3");
-			 
-		 producto3.rellenarProducto(producto3);
-			 
-			 // Producto 4
-		 
-		System.out.println("\nRellena los datos del Producto 4");
-			 
-		 producto4.rellenarProducto(producto4);
-			 
-			 // Producto 5
-		 
-		System.out.println("\nRellena los datos del Producto 5");
-			 
-		 producto5.rellenarProducto(producto5);
+			clientes.get(i).rellenarCliente(ruta, clientes.get(i));
+			
+		    for (int j = 0; j < clientes.size(); j++) {  // Bucle for para comprobar que los telefonos no se repitan
+		    	
+				while (clientes.get(i).getTelefono() == clientes.get(j).getTelefono() && i != j) {
+					System.out.println(
+								"El telefono de cliente "+i+" debe ser diferente al telefono de cliente "+j+". \nEscriba de nuevo el telefono de cliente "+i+": ");
+					clientes.get(i).setTelefono(sc.nextInt());
+				 }
+		        
+		      }
+			 		
+		}
+		
+		//ArrayList para guardar los productos
+		
+		ArrayList<Producto> productos = new ArrayList<Producto>();
+		
+		//Creamos un array con los archivos txt con los datos de los productos y así saber la cantidad de productos que hay 
+		
+		File carpetaProductos = new File("C:/Users/EstebanBP/Desktop/DAW/ENTORNOS DE DESARROLLO/GestionPedidos/Productos"); 
+		File[] listaProductos = carpetaProductos.listFiles();  
+
+
+			// Rellenamos los datos de los productos con el método rellenarProducto (nombre, precio, stock)
+			
+			 // Producto i
+		
+		for (int i = 0; i < listaProductos.length; i++) {   // Bucle for para crear tantos productos como archivos tenga la carpeta Productos y asignar la ruta de su respectivo archivo
+			
+			// Cliente i
+				
+				productos.add(new Producto());
+					
+				System.out.println("\nRellena los datos del Producto "+i);
+				
+				String ruta = "C:/Users/EstebanBP/Desktop/DAW/ENTORNOS DE DESARROLLO/GestionPedidos/Productos/Producto"+i+".txt";
+				 
+				productos.get(i).rellenarProducto(ruta, productos.get(i));
+				
+				 		
+			}
+
 		
 				// Una vez creados clientes y productos entramos al MENU PEDIDOS
 		 
@@ -133,88 +125,69 @@ public class GestionPedidos {
 			 respuesta = sc.next();
 
 			 if (respuesta.equalsIgnoreCase("y")) {  // Bucle para crear un pedido pidiendo el telefono del cliente
+				 	
 				 
-				 	System.out.println("\nCliente 1: " + cliente1.getNombre() + " Telf: " + cliente1.getTelefono() + "\nCliente 2: " + cliente2.getNombre() + " Telf: " + cliente2.getTelefono() + "\nCliente 3: " + cliente3.getNombre() + " Telf: " + cliente3.getTelefono());
+				 //TODO Bucle para asignar el telefono con la cantidad de clientes que sea
 				 
+					for (int i = 0; i < listaClientes.length; i++) {
+						
+					 	System.out.println("\nCliente "+i+": " + clientes.get(i).getNombre() + " Telf: " + clientes.get(i).getTelefono());
+						
+					}
+										
 					System.out.println("\nEscriba el telefono del cliente:");
 
 					int telf = sc.nextInt();
-
-					if (telf == cliente1.getTelefono() || telf == cliente2.getTelefono() || telf == cliente3.getTelefono()) {
-
-						if (telf == cliente1.getTelefono()) {
+					
+					do {
+																
+						for (int j = 0; j < listaClientes.length; j++) {
+						
+							if( telf == clientes.get(j).getTelefono()) {
 							
-							cli = cliente1;
-
-							System.out.println("Ha elegido a: " + cli.getNombre() + " " + cli.getApellidos());
-
-
-						} else {
-
-							if (telf == cliente2.getTelefono()) {
-
-								cli = cliente2;
-
-								System.out.println("Ha elegido a: " + cli.getNombre() + " " + cli.getApellidos());
-
-
-							} else { // Telf = cliente 3
-
-								cli = cliente3;
-
-								System.out.println("Ha elegido a: " + cli.getNombre() + " " + cli.getApellidos());
-
+								cli = clientes.get(j);
+							
 							}
-
+						
 						}
 						
-						// Pedimos al usuario que elija el producto con un switch para asignarlo al producto 1 
+					
+					} while (cli.getTelefono() != telf);
+
+					
+					System.out.println("Ha elegido a: " + cli.getNombre() + " " + cli.getApellidos());
+
+					
+						
+						// Pedimos al usuario que elija el producto para asignarlo al producto 1 
 
 						int prod;
+						
+						System.out.println("\nCARTA:");
+						
+						for (int i = 0; i < listaProductos.length; i++) {
+							
+							System.out.println(i+") "+ productos.get(i).getNombre() + "		Precio: "+ productos.get(i).getPrecio());
+							
+						}
 
-						System.out.println("\nElija el producto 1: " + "\n1." + producto1.getNombre() + "		Precio: "+ producto1.getPrecio() + " Stock: " + producto1.mostrarStock() + "\n2." + producto2.getNombre()
-						+ "		Precio: "+ producto2.getPrecio() + " Stock: " + producto2.mostrarStock() + "\n3." + producto3.getNombre() + "		Precio: "+ producto3.getPrecio() + " Stock: " + producto4.mostrarStock() + "\n4." + producto4.getNombre() + "		Precio: "+ producto4.getPrecio() + " Stock: " + producto4.mostrarStock() + "\n5." + producto5.getNombre()+ "		Precio: "+ producto5.getPrecio() + " Stock: " + producto5.mostrarStock());
+						System.out.println("\nElija el producto 1:");
 
 						prod = sc.nextInt();
-
-						switch (prod) {
-
-						case 1:
-							prod1 = producto1;
-
-							break;
-
-						case 2:
-							prod1 = producto2;
-
-							break;
-
-						case 3:
-							prod1 = producto3;
-
-							break;
-
-						case 4:
-							prod1 = producto4;
-
-							break;
-
-						case 5:
-							prod1 = producto5;
-
-							break;
-
-						default:
-							System.out.println("Producto no valido");
-
-							break;
-
+						
+						if(prod >= 0 && prod < listaProductos.length) {
+							
+							prod1 = productos.get(prod);
+							
+						}else {
+							System.out.println("Producto 1 incorrecto");
 						}
+						
 						
 						//Si el stock del producto 1 elegido es menor a 5, se repone el stock al completo
 
 						
-						System.out.println("Ha elegido como Producto 1: " + prod1.getNombre() + "   Precio: " + prod1.getPrecio() + " Stock: " + prod1.mostrarStock());
+						System.out.println("Ha elegido como Producto 1: " + prod1.getNombre() + "   Precio: " + prod1.getPrecio() + "      Stock: " + prod1.mostrarStock());
 						
 						if (prod1.mostrarStock() <= 5) {
 							
@@ -248,43 +221,22 @@ public class GestionPedidos {
 
 						if (respuesta.equalsIgnoreCase("y")) {
 
-							System.out.println("Elija el producto 2: " + "\n1." + producto1.getNombre() + "		Precio: "+ producto1.getPrecio() + " Stock: " + producto1.mostrarStock() + "\n2." + producto2.getNombre()
-							+ "		Precio: "+ producto2.getPrecio() + " Stock: " + producto2.mostrarStock() + "\n3." + producto3.getNombre() + "		Precio: "+ producto3.getPrecio() + " Stock: " + producto4.mostrarStock() + "\n4." + producto4.getNombre() + "		Precio: "+ producto4.getPrecio() + " Stock: " + producto4.mostrarStock() + "\n5." + producto5.getNombre()+ "		Precio: "+ producto5.getPrecio() + " Stock: " + producto5.mostrarStock());
-
+							System.out.println("\nElija el producto 2:");
+							
+							for (int i = 0; i < listaProductos.length; i++) {
+								
+								System.out.println(i+") "+ productos.get(i).getNombre() + "		Precio: "+ productos.get(i).getPrecio());
+								
+							}
+							
 							prod = sc.nextInt();
-
-							switch (prod) {
-
-							case 1:
-								prod2 = producto1;
-
-								break;
-
-							case 2:
-								prod2 = producto2;
-
-								break;
-
-							case 3:
-								prod2 = producto3;
-
-								break;
-
-							case 4:
-								prod2 = producto4;
-
-								break;
-
-							case 5:
-								prod2 = producto5;
-
-								break;
-
-							default:
-								prod2 = null;
-
-								break;
-
+							
+							if(prod >= 0 && prod < listaProductos.length) {
+								
+								prod2 = productos.get(prod);
+								
+							}else {
+								System.out.println("Producto 2 incorrecto");
 							}
 							
 							//Si el stock del producto 2 elegido es menor a 5, se repone el stock al completo
@@ -304,7 +256,7 @@ public class GestionPedidos {
 							// Pedimos al usuario la cantidad de producto 2 que tendrá el pedido. Si es mayor al stock disponible, se servirá la cantidad disponible de producto 2
 
 							
-							System.out.println("Indique la cantidad que quiere de " + prod1.getNombre() + " (int menor de 30)");
+							System.out.println("Indique la cantidad que quiere de " + prod2.getNombre() + " (int menor de 30)");
 							
 							cantidad2 = sc.nextInt();
 							
@@ -366,7 +318,9 @@ public class GestionPedidos {
 								// En caso de que no se haya pagado el pedido, se añadirá un 0 al historial
 
 								if (pago.getCodigoPago() != 0) {  // Una vez pagado el pedido y con codigoPago diferente a 0, procedemos a servir el pedido y actualizar el stock de cada producto
-
+									
+									pedido.setPago(pago.getCodigoPago());
+									
 									pedido.setEstado("PAGADO");
 
 									System.out.println(pedido.getEstado());
@@ -394,6 +348,8 @@ public class GestionPedidos {
 									
 									System.out.println("Historial:" + cli.getHistorial());
 									
+									pedido.imprimirPedido(pedido);
+									
 								} else {
 
 									System.out.println("Pedido no pagado");
@@ -406,9 +362,12 @@ public class GestionPedidos {
 
 							if (elec == 2) {
 								
-								if (prod1 != null) {
+								System.out.println(pedido.getProducto1());
+								
+								if (pedido.getProducto1() != null) {
 									
 									pedido.eliminarProducto1();
+									
 									
 								} else {
 									
@@ -422,7 +381,7 @@ public class GestionPedidos {
 
 							if (elec == 3) {
 								
-								if(prod2 != null) {
+								if(pedido.getProducto2() != null) {
 									
 									pedido.eliminarProducto2();
 									
@@ -438,59 +397,66 @@ public class GestionPedidos {
 
 							if (elec == 4) {
 								
-								if(prod1 == null) {
+								if(pedido.getProducto1() == null) {
 									
-									System.out
-									.println("Elija el nuevo producto 1: " + "\n1." + producto1.getNombre() + "\n2." + producto2.getNombre()
-											+ "\n3." + producto3.getNombre() + "\n4." + producto4.getNombre() + "\n5." + producto5.getNombre());
-
-									int selec = sc.nextInt();
-
-									switch (selec) {
-									case 1:
-
-										pedido.agregarProducto1(producto1);
-
-										break;
-
-									case 2:
-
-										pedido.agregarProducto1(producto2);
-
-										break;
-
-									case 3:
-
-										pedido.agregarProducto1(producto3);
-
-										break;
-
-									case 4:
-
-										pedido.agregarProducto1(producto4);
-
-										break;
-
-									case 5:
-
-										pedido.agregarProducto1(producto5);
-
-										break;
-
-									default:
-
-										System.out.println("Producto 1 no se ha cambiado");
-
-										break;
+									System.out.println("\nElija el producto 1:");
+									
+									for (int i = 0; i < listaProductos.length; i++) {
+										
+										System.out.println("\n"+i+") "+ productos.get(i).getNombre() + "		Precio: "+ productos.get(i).getPrecio() + " Stock: " + productos.get(i).mostrarStock());
+										
 									}
 
-									System.out.println(pedido.toString());
+									
+									prod = sc.nextInt();
+									
+									if(prod >= 0 && prod < listaProductos.length) {
+										
+										prod1 = productos.get(prod);
+										
+									}else {
+										System.out.println("Producto 1 incorrecto");
+									}
+									
+									
+									//Si el stock del producto 1 elegido es menor a 5, se repone el stock al completo
+
+									
+									System.out.println("Ha elegido como Producto 1: " + prod1.getNombre() + "   Precio: " + prod1.getPrecio() + " Stock: " + prod1.mostrarStock());
+									
+									if (prod1.mostrarStock() <= 5) {
+										
+										System.out.println("Stock de " + prod1.getNombre() + " bajo. \n Reponemos el stock al completo");
+										
+										prod1.llenarStock();
+										
+										System.out.println("Stock de " + prod1.getNombre() + ": " + prod1.mostrarStock());
+										
+									}
+									
+									// Pedimos al usuario la cantidad de producto 1 que tendrá el pedido. Si es mayor al stock disponible, se servirá la cantidad disponible de producto 1
+
+									
+									System.out.println("Indique la cantidad que quiere de su producto 1: "+prod1.getNombre());
+									
+									cantidad1 = sc.nextInt();
+									
+									if(cantidad1 > prod1.mostrarStock()) {
+										
+										System.out.println("No puede comprar más de "+prod1.mostrarStock()+" unidades. Le serviremos el stock disponible, siendo " + prod1.mostrarStock());
+										cantidad1 = prod1.mostrarStock();
+										
+									}
 									
 								} else {
 									
 									System.out.println("El producto 1 ya esta elegido. Elimine el producto 1 para agregar otro.");
 									
 								}
+								
+								pedido.setProducto1(prod1);
+								pedido.setCantidad1(cantidad1);
+								System.out.println(pedido.toString());
 
 							}
 							
@@ -498,70 +464,70 @@ public class GestionPedidos {
 
 							if (elec == 5) {
 								
-								if (prod2 == null) {
+								if (pedido.getProducto2() == null) {
 									
-									System.out
-									.println("Elija el nuevo producto 2: " + "\n1." + producto1.getNombre() + "\n2." + producto2.getNombre()
-											+ "\n3." + producto3.getNombre() + "\n4." + producto4.getNombre() + "\n5." + producto5.getNombre());
-
-									int selec = sc.nextInt();
-
-									switch (selec) {
-									case 1:
-
-										pedido.agregarProducto2(producto1);
-
-										break;
-
-									case 2:
-
-										pedido.agregarProducto2(producto2);
-
-										break;
-
-									case 3:
-
-										pedido.agregarProducto2(producto3);
-
-										break;
-
-									case 4:
-
-										pedido.agregarProducto2(producto4);
-
-										break;
-
-									case 5:
-
-										pedido.agregarProducto2(producto5);
-
-										break;
-
-									default:
-
-										System.out.println("Producto 2 no se ha cambiado");
-
-										break;
+									System.out.println("\nElija el producto 2:");
+									
+									for (int i = 0; i < listaProductos.length; i++) {
+										
+										System.out.println("\n"+i+") "+ productos.get(i).getNombre() + "		Precio: "+ productos.get(i).getPrecio() + " Stock: " + productos.get(i).mostrarStock());
+										
 									}
+									
+									prod = sc.nextInt();
+									
+									if(prod >= 0 && prod < listaProductos.length) {
+										
+										prod2 = productos.get(prod);
+										
+									}else {
+										System.out.println("Producto 2 incorrecto");
+									}
+									
+									//Si el stock del producto 2 elegido es menor a 5, se repone el stock al completo
+									
+									System.out.println("Ha elegido como Producto 2: " + prod2.getNombre() + "   Precio: " + prod2.getPrecio() + " Stock: " + prod2.mostrarStock());
+									
+									if (prod2.mostrarStock() <= 5) {
+										
+										System.out.println("Stock de Producto 2 bajo. \n Reponemos el stock al completo");
+										
+										prod2.llenarStock();
+										
+										System.out.println("Stock de Producto 2: " + prod2.mostrarStock());
+										
+									}
+									
+									// Pedimos al usuario la cantidad de producto 2 que tendrá el pedido. Si es mayor al stock disponible, se servirá la cantidad disponible de producto 2
 
-									System.out.println(pedido.toString());
+									
+									System.out.println("Indique la cantidad que quiere de " + prod2.getNombre() + " (int menor de 30)");
+									
+									cantidad2 = sc.nextInt();
+									
+									if(cantidad2 > prod2.mostrarStock()) {
+										
+										System.out.println("No puede comprar más de "+prod2.mostrarStock()+" unidades. Le serviremos el stock disponible, siendo " + prod2.mostrarStock());
+										cantidad2 = prod2.mostrarStock();
+										
+									}
+									
 									
 								} else {
 									
 									System.out.println("El producto 2 ya esta elegido. Elimine el producto 2 para agregar otro.");
 									
 								}
+								
+								pedido.setProducto2(prod2);
+								pedido.setCantidad2(cantidad2);
+								System.out.println(pedido.toString());
 
 							}
+							
 
 						} while (elec != 1);
 
-
-					} else {
-
-						System.out.println("Telefono incorrecto");
-
-					}
 					
 			 } else {
 				 
@@ -570,6 +536,8 @@ public class GestionPedidos {
 			 }
 			 
 		 } while (respuesta.equalsIgnoreCase("y"));
+		 
+		 System.out.println("Programa terminado");
 		 
 		 sc.close();  // Cerramos el scanner
 

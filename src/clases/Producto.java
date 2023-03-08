@@ -1,5 +1,7 @@
-package controlStock;
+package clases;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 
@@ -72,9 +74,34 @@ public class Producto {
 	
 	// Método rellenarProducto para rellenar los atributos necesarios de cada producto
 	
-	public void rellenarProducto(Producto producto) {
+	public void rellenarProducto(String ruta, Producto producto) {
 		
-		Scanner sc = new Scanner(System.in);
+		File f = new File(ruta);
+		Scanner s;
+		try {
+			s = new Scanner(f);
+			String linea = s.nextLine();
+			Scanner sl = new Scanner(linea);
+			sl.useDelimiter("\\s*;\\s*");
+			producto.setNombre(sl.next());
+			producto.setPrecio(sl.nextDouble());
+			producto.llenarStock();
+			
+			s.close();
+			sl.close();
+		
+		} catch (FileNotFoundException e) {
+			// PrintWriter pw = null;
+			e.printStackTrace();
+			// e.printStackTrace(pw);
+
+		}
+		
+		/**
+		 * Codigo anterior para recoger los datos por consola
+		 * 
+		 * 
+		 * Scanner sc = new Scanner(System.in);
 		
 		System.out.println("Nombre del producto:");
 		producto.setNombre(sc.nextLine());
@@ -87,6 +114,9 @@ public class Producto {
 			 
 		System.out.println("Producto: \nNombre: " + producto.getNombre() +
 		"\nPrecio: " + producto.getPrecio());
+		
+		sc.close
+		*/
 		
 	}
 	

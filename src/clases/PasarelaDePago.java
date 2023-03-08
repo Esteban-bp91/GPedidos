@@ -1,4 +1,4 @@
-package controlStock;
+package clases;
 
 import java.util.Date;
 import java.util.Scanner;
