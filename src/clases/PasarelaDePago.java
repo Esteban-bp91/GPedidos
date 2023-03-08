@@ -1,12 +1,29 @@
-package practica4;
+package controlStock;
 
 import java.util.Date;
 import java.util.Scanner;
 
+
+/**
+ * Clase PasarelaDePago de la practica 4 de Programación
+ * 
+ * @author EstebanBP
+ * @version 1.1  
+ * @since 08/02/2023
+ * 
+ * 
+ * Funcionalidad controlStock añadida
+ * 
+ */
+
 public class PasarelaDePago {
+	
+	// Atributos de la clase PasarelaDePago
 
 	private double importe;
 	private long codigoPago;
+	
+	// Getters and setters
 
 	public double getImporte() {
 		return importe;
@@ -24,7 +41,7 @@ public class PasarelaDePago {
 		this.codigoPago = codigoPago;
 	}
 
-	/**
+	/** Constructor de PasarelaDePago pasando el importe a pagar como atributo. Aquí elegimos el método de pago
 	 * @param importe
 	 * @param codigoPago
 	 */
@@ -60,8 +77,10 @@ public class PasarelaDePago {
 			System.out.println("Metodo de pago incorrecto");
 		}
 	}
-
-	public long Efectivo(double importe) { // REVISAR
+	
+	// Método Efectivo sirve para pagar el pedido con efectivo y nos devuelve el código de pago @return
+	
+	public long Efectivo(double importe) {
 		this.importe = importe;
 		
 		int B500 = 0, B200 = 0, B100 = 0, B50 = 0, B20 = 0, B10 = 0, B5 = 0, M2 = 0, M1 = 0, C50 = 0, C20 = 0, C10 = 0,
@@ -70,7 +89,7 @@ public class PasarelaDePago {
 
 		System.out.println("Ha elegido pago en efectivo");
 
-		if (importe >= 500) {
+		if (importe >= 500) {  // Este if nos calcula la cantidad de billetes de 500€ necesarios
 
 			double b500 = importe / 500;
 			B500 = (int) b500;
@@ -79,7 +98,7 @@ public class PasarelaDePago {
 
 		}
 
-		if (importe >= 200) {
+		if (importe >= 200) {  // Este if nos calcula la cantidad de billetes de 200€ necesarios
 
 			double b200 = importe / 200;
 			B200 = (int) b200;
@@ -88,7 +107,7 @@ public class PasarelaDePago {
 
 		}
 
-		if (importe >= 100) {
+		if (importe >= 100) { // Este if nos calcula la cantidad de billetes de 100€ necesarios
 
 			double b100 = importe / 100;
 			B100 = (int) b100;
@@ -97,7 +116,7 @@ public class PasarelaDePago {
 
 		}
 
-		if (importe >= 50) {
+		if (importe >= 50) {  // Este if nos calcula la cantidad de billetes de 50€ necesarios
 
 			double b50 = importe / 50;
 			B50 = (int) b50;
@@ -106,7 +125,7 @@ public class PasarelaDePago {
 
 		}
 
-		if (importe >= 20) {
+		if (importe >= 20) {  // Este if nos calcula la cantidad de billetes de 20€ necesarios
 
 			double b20 = importe / 20;
 			B20 = (int) b20;
@@ -115,7 +134,7 @@ public class PasarelaDePago {
 
 		}
 
-		if (importe >= 10) {
+		if (importe >= 10) {  // Este if nos calcula la cantidad de billetes de 10€ necesarios
 
 			double b10 = importe / 10;
 			B10 = (int) b10;
@@ -124,7 +143,7 @@ public class PasarelaDePago {
 
 		}
 
-		if (importe >= 5) {
+		if (importe >= 5) {  // Este if nos calcula la cantidad de billetes de 5€ necesarios
 
 			double b5 = importe / 5;
 			B5 = (int) b5;
@@ -133,7 +152,7 @@ public class PasarelaDePago {
 
 		}
 
-		if (importe >= 2) {
+		if (importe >= 2) {   // Este if nos calcula la cantidad de monedas de 2€ necesarias
 
 			double m2 = importe / 2;
 			M2 = (int) m2;
@@ -142,7 +161,7 @@ public class PasarelaDePago {
 
 		}
 
-		if (importe >= 1) {
+		if (importe >= 1) {  // Este if nos calcula la cantidad de monedas de 1€ necesarias
 
 			double m1 = importe;
 			M1 = (int) m1;
@@ -151,9 +170,9 @@ public class PasarelaDePago {
 
 		}
 
-		importe = importe * 100;
+		importe = importe * 100;  // Multiplicamos por 100 para seguir usando el mismo codigo para los centimos
 
-		if (importe >= 50) {
+		if (importe >= 50) {  // Este if nos calcula la cantidad de monedas de 50cent necesarias
 
 			double c50 = importe / 50;
 			C50 = (int) c50;
@@ -162,7 +181,7 @@ public class PasarelaDePago {
 
 		}
 
-		if (importe >= 20) {
+		if (importe >= 20) {   // Este if nos calcula la cantidad de monedas de 20cent necesarias
 
 			double c20 = importe / 20;
 			C20 = (int) c20;
@@ -171,7 +190,7 @@ public class PasarelaDePago {
 
 		}
 
-		if (importe >= 10) {
+		if (importe >= 10) {  // Este if nos calcula la cantidad de monedas de 10cent necesarias
 
 			double c10 = importe / 10;
 			C10 = (int) c10;
@@ -180,9 +199,9 @@ public class PasarelaDePago {
 
 		}
 
-		importe = Math.round(importe);
+		importe = Math.round(importe);  // Redondeamos al final para obtener las monedas de 5cent necesarias
 
-		if (importe >= 5) {
+		if (importe >= 5) {  // Este if nos calcula la cantidad de monedas de 5cent necesarias
 
 			double c5 = importe / 5;
 			C5 = (int) c5;
@@ -192,6 +211,7 @@ public class PasarelaDePago {
 		
 		System.out.println("Deja de propina " + importe + " centimos");
 		
+		// Una vez pagado con efectivo, calculamos el codigo de pago con fecha.getTime()
 		
 		Date fecha = new Date();
 		
@@ -201,6 +221,8 @@ public class PasarelaDePago {
 		
 		return codigoPago;
 	}
+	
+	// Método Tarjeta sirve para pagar el pedido con tarjeta y nos devuelve el código de pago @return
 
 	public long Tarjeta(String tarjeta) {
 
@@ -367,8 +389,11 @@ public class PasarelaDePago {
 		return codigoPago; // Devolvemos el codigo de pago, si no esta pagado devolverá 0
 		
 	}
+	
+	
+	// Método Cuenta sirve para pagar el pedido con una cuenta bancaria y nos devuelve el código de pago @return
 
-	public long Cuenta(String c) { // REVISAR
+	public long Cuenta(String c) {
 
 		boolean pagado = false;
 		
