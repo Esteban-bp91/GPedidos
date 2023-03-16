@@ -37,7 +37,7 @@ public class GestionPedidos {
 		Fichero f = new Fichero();
 		Scanner sc = new Scanner(System.in);
 		int stockNulo[] = new int[30];
-		Producto nulo = new Producto("Nulo", 0.00, stockNulo);
+		Producto nulo = new Producto( 0,"Nulo", 0.00, stockNulo);
 
 		//ArrayList para guardar los clientes 
 		ArrayList<Cliente> clientes = new ArrayList<Cliente>(); 
@@ -256,7 +256,7 @@ public class GestionPedidos {
 				saltodelinea = sc.nextLine(); // Guardamos aquí el salto de carro para evitar errores
 				// Recogemos los datos del nuevo cliente por consola				
 				Producto nuevo = new Producto();								
-				nuevo.rellenarProducto(nuevo);				 
+				nuevo.rellenarProducto(nuevo, productos);				 
 				productos.add(nuevo);  // Guardamos el nuevo cliente en el array de clientes				
 				Fichero nuevoProducto = new Fichero();				
 				nuevoProducto.crearProducto(nuevo);				

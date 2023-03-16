@@ -57,7 +57,7 @@ public class Fichero {
 	public void crearProducto(Producto producto) {
 		
 		   try {
-		      File nuevoProducto = new File(rutaProductos+"/PR"+producto.getNombre()+".txt");      
+		      File nuevoProducto = new File(rutaProductos+"/PR"+producto.getCodigo()+".txt");      
 		      if (nuevoProducto.createNewFile()) {	    	  
 		        System.out.println("Archivo creado: " + nuevoProducto.getName());	        
 		      } else {	    	  
@@ -72,14 +72,14 @@ public class Fichero {
 			PrintWriter pw = null;
 			try {
 				// Añadir flag a true para no machacar contenido del fichero de escritura
-				fichero = new FileWriter(rutaProductos+"/PR"+producto.getNombre()+".txt", true);
+				fichero = new FileWriter(rutaProductos+"/PR"+producto.getCodigo()+".txt", true);
 				
 				String precio = producto.getPrecio()+"";
 				if(precio.contains(".")) {			
 					precio = precio.replace(".",",");
 				}
 				pw = new PrintWriter(fichero);
-				pw.println(producto.getNombre()+"; "+precio);
+				pw.println(producto.getCodigo()+"; "+producto.getNombre()+"; "+precio);
 
 			} catch (Exception e) {
 				e.printStackTrace();

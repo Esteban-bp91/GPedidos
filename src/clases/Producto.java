@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
 
@@ -22,12 +23,21 @@ import java.util.Scanner;
 public class Producto {
 	
 	// Atributos de la clase Producto
-
+	
+	private int codigo;
 	private String nombre;
 	private double precio;
 	private int stock[] = new int[30]; 
 	
 	// Getters and setters
+	
+	public int getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(int codigo) {
+		this.codigo = codigo;
+	}
 
 	public String getNombre() {
 		return nombre;
@@ -68,7 +78,8 @@ public class Producto {
 	 * @param precio
 	 * @param stock
 	 */
-	public Producto(String nombre, double precio, int[] cantidad) {
+	public Producto(int codigo, String nombre, double precio, int[] cantidad) {
+		this.codigo = codigo;
 		this.nombre = nombre;
 		this.precio = precio;
 		this.stock = cantidad;
@@ -83,6 +94,7 @@ public class Producto {
 			String linea = s.nextLine();
 			Scanner sl = new Scanner(linea);
 			sl.useDelimiter("\\s*;\\s*");
+			producto.setCodigo(sl.nextInt());
 			producto.setNombre(sl.next());
 			producto.setPrecio(sl.nextDouble());
 			producto.llenarStock();
@@ -174,11 +186,22 @@ public class Producto {
 		
 	}
 	
-	public void rellenarProducto(Producto producto) throws ParseException{		
+	public void rellenarProducto(Producto producto, ArrayList<Producto> productos) throws ParseException{		
 
 		Scanner sc = new Scanner(System.in);
-		String saltodelinea;
-		
+
+		// Generamos un int random entre 1000 y 9999 para el codigo del producto
+		Random numAleatorio = new Random();
+		int cod = numAleatorio.nextInt(9999-1000+1)+1000;
+		for(int i = 0; i < productos.size(); i++) {
+			if(cod != productos.get(i).getCodigo()) {
+				producto.setCodigo(cod);
+			} else {
+				cod = numAleatorio.nextInt(9999-1000+1)+1000;
+			}
+		}
+		System.out.println("Nuevo producto con codigo: "+producto.getCodigo());
+
 		System.out.println("Nombre del producto:");
 		String nom = sc.nextLine();
 		producto.setNombre(nom.toLowerCase());
