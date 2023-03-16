@@ -27,6 +27,7 @@ public class Pedido {
 	private double importeTotal;
 	private long codigoPago;
 	private String estado;
+	private String rutaPedidos = "C:/Users/EstebanBP/eclipse-workspace/GPedidos/src/Pedidos";
 	
 	// Getters and setters
 	
@@ -178,22 +179,28 @@ public class Pedido {
 	public String toString() {
 
 		if (producto2 == null) {
+			
+			Double impor = (cantidad1 * producto1.getPrecio());
 
-			return "CANT.             PRODUCTO         PRECIO UD.       TOTAL\n"
+			importeTotal = Math.round(impor * 100) / 100d;
+
+			return "\nCANT.             PRODUCTO         PRECIO UD.       TOTAL\n"
 					+ "=====             =========         =========        =====\n" + cantidad1
 					+ "                   " + producto1.getNombre() + "               " + producto1.getPrecio() + "€"
-					+ "           " + cantidad1 * producto1.getPrecio() + "€" + "\nImporte Total = "
-					+ (cantidad1 * producto1.getPrecio()) + "€";
+					+ "           " + cantidad1 * producto1.getPrecio() + "€" + "\nImporte Total = "+ importeTotal + "€";
 
 		} else {
+			
+			Double impor = (cantidad1 * producto1.getPrecio()) + (cantidad2 * producto2.getPrecio());
 
-			return "CANT.             PRODUCTO               PRECIO UD.       TOTAL\n"
+			importeTotal = Math.round(impor * 100) / 100d;
+
+			return "\nCANT.             PRODUCTO               PRECIO UD.       TOTAL\n"
 					+ "=====             =========               =========        =====\n" + cantidad1
 					+ "                   " + producto1.getNombre() + "                    " + producto1.getPrecio() + "€"
 					+ "           " + cantidad1 * producto1.getPrecio() + "€" + "\n" + cantidad2
 					+ "                   " + producto2.getNombre() + "                    " + producto2.getPrecio() + "€"
-					+ "           " + cantidad2 * producto2.getPrecio() + "€" + "\nImporte Total = "
-					+ (double)((double)(cantidad1 * producto1.getPrecio()) + (double)(cantidad2 * producto2.getPrecio())) + "€";
+					+ "           " + cantidad2 * producto2.getPrecio() + "€" + "\nImporte Total = "+ importeTotal+ "€";
 
 		}
 
@@ -201,7 +208,7 @@ public class Pedido {
 	
 	public void imprimirPedido(Pedido pedido) {
 		
-		String ruta = "C:/Users/EstebanBP/Desktop/DAW/ENTORNOS DE DESARROLLO/GestionPedidos/Pedidos/" +pedido.getPago()+ ".txt";
+		String ruta = rutaPedidos+"/" +pedido.getPago()+ ".txt";
 		FileWriter fichero = null;
 		PrintWriter pw = null;
 		try {

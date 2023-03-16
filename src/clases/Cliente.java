@@ -4,8 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 
@@ -27,7 +27,7 @@ public class Cliente {
 
 	private String nombre;
 	private String apellidos;
-	private Date FechaDeAlta;   // LocalDate para recoger datos del cliente por consola. Date para recoger datos del cliente por fichero
+	private String FechaDeAlta;   // LocalDate para recoger datos del cliente por consola. Date para recoger datos del cliente por fichero
 	private int telefono;
 	private String direccion;
 	private String historial;
@@ -59,11 +59,11 @@ public class Cliente {
 	}
 	*/
 	
-	public Date getFechaDeAlta() {    
+	public String getFechaDeAlta() {    
 		return FechaDeAlta;
 	}
 
-	public void setFechaDeAlta(Date date) {  // Método setFechaDeAlta para recoger datos del cliente por fichero
+	public void setFechaDeAlta(String date) {  // Método setFechaDeAlta para recoger datos del cliente por fichero
 		FechaDeAlta = date;
 	}
 
@@ -135,7 +135,7 @@ public class Cliente {
 	 * @param direccion
 	 * @param historial
 	 */
-	 public Cliente(String nombre, String apellidos, Date fechaDeAlta, int telefono, String direccion,
+	 public Cliente(String nombre, String apellidos, String fechaDeAlta, int telefono, String direccion,
 	 
 			String historial) {
 		this.nombre = nombre;
@@ -197,29 +197,21 @@ public class Cliente {
 
 	}
 	
-	// Método rellenarCliente sirve para rellenar los atributos del cliente
+	// Método rellenarCliente(File, Cliente) sirve para rellenar los atributos del cliente con los ficheros de la carpeta Clientes
 	
-	public void rellenarCliente(String ruta, Cliente cliente) throws FileNotFoundException, IOException, ParseException {
-		
-		File f = new File(ruta);
-		Scanner s;
+	public void rellenarCliente(File f, Cliente cliente) throws FileNotFoundException, IOException, ParseException {
+				
 		try {
-			s = new Scanner(f);
+			Scanner s = new Scanner(f);
 			String linea = s.nextLine();
 			Scanner sl = new Scanner(linea);
 			sl.useDelimiter("\\s*;\\s*");
 			cliente.setNombre(sl.next().toLowerCase());
 			cliente.setApellidos(sl.next().toUpperCase());
 				
-			String fecha = sl.next();  // Recogemos la fecha en este String para poder parsear a Date
-			System.out.println(fecha);
-			
-			SimpleDateFormat dma = new SimpleDateFormat("dd/MM/yyyy");
-			Date date = (Date)dma.parse(fecha);  			    
-			cliente.setFechaDeAlta(date);
-			
-			System.out.println(cliente.getFechaDeAlta());
-				
+			String fecha = sl.next();  // Recogemos la fecha en este String para poder parsear a Date			  			    
+			cliente.setFechaDeAlta(fecha);
+										
 			String telf = sl.next(); // Recogemos el teléfono en este String para poder parsear a int
 			int telefono = Integer.parseInt(telf);
 			cliente.setTelefono(telefono);
@@ -227,9 +219,6 @@ public class Cliente {
 			cliente.setDireccion(sl.next());
 							
 			cliente.setHistorial("0");
-
-			s.close();
-			sl.close();
 			
 		} catch (FileNotFoundException e) {
 			// PrintWriter pw = null;
@@ -238,11 +227,16 @@ public class Cliente {
 
 		}
 		
-		
+	}
+	
+	
+	
+	// Método rellenarCliente(Cliente) donde recogemos los datos del nuevo cliente por consola
 
-		
-		/** Código anterior para recoger los datos del cliente por consola
+	public void rellenarCliente(Cliente cliente) throws ParseException{		
+
 		Scanner sc = new Scanner(System.in);
+		String saltodelinea;
 		
 		System.out.println("Nombre del cliente:");
 		String nom = sc.nextLine();
@@ -252,26 +246,18 @@ public class Cliente {
 		String ape = sc.nextLine();
 		cliente.setApellidos(ape.toUpperCase());
 
-		cliente.setFechaDeAlta(LocalDate.now());
-
+		String fecha = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));  // Recogemos la fecha en este String para poder parsear a Date			
+		  			    
+		cliente.setFechaDeAlta(fecha);
+		
 		 System.out.println("Telefono del cliente:");
 		 cliente.setTelefono(sc.nextInt());
-		 String saltodelinea;
 		 saltodelinea = sc.nextLine(); // Guardamos aquí el salto de carro para evitar errores
 
 		 System.out.println("Direccion del cliente:");
 		 cliente.setDireccion(sc.nextLine());
 		 cliente.setHistorial("0");
-		 
-		 System.out.println("Cliente: \nNombre: " + cliente.getNombre() +
-		 " Apellidos: " + cliente.getApellidos() + " Fecha de Alta: " +
-		 cliente.getFechaDeAlta() + " Telefono: " + cliente.getTelefono() +
-		 " Direccion: " + cliente.getDireccion() + " Historial: " +
-		 cliente.getHistorial());
-		 
-		 */
 		
 	}
-
 
 }

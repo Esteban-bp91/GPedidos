@@ -51,12 +51,12 @@ public class PasarelaDePago {
 		int metodo;
 		String numero;
 		
-		Scanner sc = new Scanner(System.in);
+		Scanner scanner = new Scanner(System.in);
 		
 		System.out.println("Introduzca el metodo de pago: \n1. Efectivo \n2. Tarjeta \n3. Cuenta bancaria");
 
-		metodo = sc.nextInt();
-		String saltodelinea = sc.nextLine(); // Guardamos aquí el salto de carro para evitar errores
+		metodo = scanner.nextInt();
+		String saltodelinea = scanner.nextLine(); // Guardamos aquí el salto de carro para evitar errores
 		
 		if (metodo == 1 || metodo == 2 || metodo == 3) {
 			if(metodo == 1) {
@@ -64,18 +64,19 @@ public class PasarelaDePago {
 			}
 			if (metodo == 2) {
 				System.out.println("Ha elegido pagar con tarjeta \nIntroduzca el numero de tarjeta");
-				numero = sc.nextLine();
+				numero = scanner.nextLine();
 				codigoPago = Tarjeta(numero);
 			}
 			if (metodo == 3) {
 				System.out.println("Ha elegido Cuenta bancaria \nIntroduzca su numero IBAN:");
-				numero = sc.nextLine();
+				numero = scanner.nextLine();
 				codigoPago = Cuenta(numero);
 			}
 
 		} else {
 			System.out.println("Metodo de pago incorrecto");
 		}
+		
 	}
 	
 	// Método Efectivo sirve para pagar el pedido con efectivo y nos devuelve el código de pago @return
