@@ -8,14 +8,14 @@ import java.util.Scanner;
 import herramientas.Fichero;
 
 /**
- * Clase main GestionPedidos de la practica 4 de Programación
+ * Clase main GPedidos v0.3 
  * 
  * @author EstebanBP
- * @version 1.1  
- * @since 08/02/2023
+ * @version 0.3  
+ * @since 16/03/2023
  * 
  * 
- * Funcionalidad controlStock añadida
+ * Funcionalidad lectura/escritura de archivos .txt para Clientes, Productos y Pedidos
  * 
  */
 
@@ -28,13 +28,13 @@ public class GestionPedidos {
 		int cantidad1 = 0;
 		Producto prod2 = null;
 		int cantidad2 = 0;
-		Cliente cli = null;
+		Cliente cli = new Cliente("clienteNulo","N. N.","01/01/0001", 600000000, "nula0", "0" );
 		Pedido pedido;
 		double impor = 0;
 		double importeTotal;
 		int respuesta;
 		String saltodelinea;
-		Fichero f = new Fichero();
+		Fichero fichero = new Fichero();
 		Scanner sc = new Scanner(System.in);
 		int stockNulo[] = new int[30];
 		Producto nulo = new Producto( 0,"Nulo", 0.00, stockNulo);
@@ -42,14 +42,14 @@ public class GestionPedidos {
 		//ArrayList para guardar los clientes 
 		ArrayList<Cliente> clientes = new ArrayList<Cliente>(); 
 		
-		// Cargamos los clientes ya guardados en la carpeta Clientes
-		clientes = f.cargarClientes(clientes);
+		// Cargamos los clientes de la carpeta Clientes
+		clientes = fichero.cargarClientes(clientes);
 		
 		//ArrayList para guardar los productos
 		ArrayList<Producto> productos = new ArrayList<Producto>();
 		
-		// Cargamois los productos ya guardados en la carpeta Productos
-		productos = f.cargarProductos(productos);
+		// Cargamos los productos de la carpeta Productos
+		productos = fichero.cargarProductos(productos);
 		
 		// Una vez creados clientes y productos entramos al MENU PEDIDOS
 		 do {
@@ -64,23 +64,11 @@ public class GestionPedidos {
 			 
 			 case 1: { 					 // Realizar un pedido nuevo
 
-						for (int i = 0; i < clientes.size(); i++) {  // Bucle for para mostrar los clientes y sus telefonos
-						 	System.out.println("\nCliente "+i+": " + clientes.get(i).getNombre() + " Telf: " + clientes.get(i).getTelefono());
-						}
-											
-						System.out.println("\nEscriba el telefono del cliente:");
-						int telf = sc.nextInt();
-						do { // Buscamos el telefono del cliente que coincida con el introducido por el usuario						
-							for (int j = 0; j < clientes.size(); j++) {							
-								if( telf == clientes.get(j).getTelefono()) {								
-									cli = clientes.get(j);								
-								}							
-							}						
-						} while (cli.getTelefono() != telf);
-
+						cli.mostrarClientes(clientes); 					
+						cli = cli.asignarCliente(clientes);
 						System.out.println("Ha elegido a: " + cli.getNombre() + " " + cli.getApellidos());
 					
-						// Pedimos al usuario que elija el producto para asignarlo al producto 1 
+						// Pedimos al usuario que elija un producto para asignarlo al producto 1 
 						System.out.println("\nElija el primer producto:");
 						prod1 = nulo.elegirProducto(productos);
 						
@@ -94,14 +82,13 @@ public class GestionPedidos {
 						}
 							
 						// El pedido puede estar compuesto por 1 o 2 productos. Preguntamos al usuario si quiere un segundo producto en el pedido. Si la respuesta es Yes, se elige el producto que será el producto 2 del pedido.
-
 						System.out.println("Quiere anyadir un segundo producto al pedido? Y/N");
 						String answer = sc.next();
 
 							if (answer.equalsIgnoreCase("y")) {
 								prod2 = nulo.elegirProducto(productos);
 								
-								// Pedimos al usuario la cantidad de producto 1 que tendrá el pedido. Si es mayor al stock disponible, se servirá la cantidad disponible de producto 1
+								// Pedimos al usuario la cantidad de producto 2 que tendrá el pedido. Si es mayor al stock disponible, se servirá la cantidad disponible de producto 1
 								System.out.println("Indique la cantidad que quiere de su producto 2: "+prod2.getNombre());				
 								cantidad2 = sc.nextInt();
 								
@@ -162,7 +149,7 @@ public class GestionPedidos {
 										}	
 										
 										System.out.println("Historial:" + cli.getHistorial());							
-										f.imprimirPedido(pedido);
+										fichero.imprimirPedido(pedido);
 										
 									} else {
 										System.out.println("Pedido no pagado");

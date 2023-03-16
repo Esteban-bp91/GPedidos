@@ -4,14 +4,14 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 
 /**
- * Clase Pedido de la practica 4 de Programación
+ * Clase Pedido GPedidos v0.3 
  * 
  * @author EstebanBP
- * @version 1.1  
- * @since 08/02/2023
+ * @version 0.3  
+ * @since 16/03/2023
  * 
  * 
- * Funcionalidad controlStock añadida
+ * Funcionalidad lectura/escritura de archivos .txt para Clientes, Productos y Pedidos
  * 
  */
 
@@ -177,8 +177,19 @@ public class Pedido {
 	// Método toString redefinido para que nos devuelva el ticket del pedido según tenga un producto o dos
 
 	public String toString() {
+		
+		if (producto1 == null) {
+			
+			Double impor = (cantidad2 * producto2.getPrecio());
 
-		if (producto2 == null) {
+			importeTotal = Math.round(impor * 100) / 100d;
+
+			return "\nCANT.             PRODUCTO         PRECIO UD.       TOTAL\n"
+					+ "=====             =========         =========        =====\n" + cantidad2
+					+ "                   " + producto2.getNombre() + "               " + producto2.getPrecio() + "€"
+					+ "           " + cantidad2 * producto2.getPrecio() + "€" + "\nImporte Total = "+ importeTotal + "€";
+
+		} else if (producto2 == null) {
 			
 			Double impor = (cantidad1 * producto1.getPrecio());
 

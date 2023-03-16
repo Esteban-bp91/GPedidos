@@ -6,18 +6,19 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 
 /**
- * Clase Cliente de la practica 4 de Programación
+ * Clase Cliente GPedidos v0.3 
  * 
  * @author EstebanBP
- * @version 1.1  
- * @since 08/02/2023
+ * @version 0.3  
+ * @since 16/03/2023
  * 
  * 
- * Funcionalidad controlStock añadida
+ * Funcionalidad lectura/escritura de archivos .txt para Clientes, Productos y Pedidos
  * 
  */
 
@@ -258,6 +259,28 @@ public class Cliente {
 		 cliente.setDireccion(sc.nextLine());
 		 cliente.setHistorial("0");
 		
+	}
+	
+	public void mostrarClientes(ArrayList<Cliente> clientes) {
+		for (int i = 0; i < clientes.size(); i++) {  // Bucle for para mostrar los clientes y sus telefonos
+		 	System.out.println("\nCliente "+i+": " + clientes.get(i).getNombre() + " Telf: " + clientes.get(i).getTelefono());
+		}
+	}
+	
+	public Cliente asignarCliente(ArrayList<Cliente> clientes) {
+		Scanner sc = new Scanner(System.in);
+		System.out.println("\nEscriba el telefono del cliente:");
+		int telf = sc.nextInt();
+		Cliente cli = new Cliente();
+		do { // Buscamos el telefono del cliente que coincida con el introducido por el usuario						
+			for (int j = 0; j < clientes.size(); j++) {							
+				if( telf == clientes.get(j).getTelefono()) {	
+					cli = clientes.get(j);								
+				}
+			}						
+		} while (cli.getTelefono() != telf);
+		
+		return cli;
 	}
 
 }

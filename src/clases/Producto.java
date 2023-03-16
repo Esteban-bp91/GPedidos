@@ -9,14 +9,14 @@ import java.util.Scanner;
 
 
 /**
- * Clase Producto de la practica 4 de Programación
+ * Clase Producto GPedidos v0.3 
  * 
  * @author EstebanBP
- * @version 1.1  
- * @since 08/02/2023
+ * @version 0.3  
+ * @since 16/03/2023
  * 
  * 
- * Funcionalidad controlStock añadida
+ * Funcionalidad lectura/escritura de archivos .txt para Clientes, Productos y Pedidos
  * 
  */
 
