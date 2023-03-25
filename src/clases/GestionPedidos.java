@@ -8,11 +8,11 @@ import java.util.Scanner;
 import herramientas.Fichero;
 
 /**
- * Clase main GPedidos v0.3 
+ * Clase main GPedidos v0.31 
  * 
  * @author EstebanBP
- * @version 0.3  
- * @since 16/03/2023
+ * @version 0.31  
+ * @since 25/03/2023
  * 
  * 
  * Funcionalidad lectura/escritura de archivos .txt para Clientes, Productos y Pedidos
@@ -66,163 +66,168 @@ public class GestionPedidos {
 
 						cli.mostrarClientes(clientes); 					
 						cli = cli.asignarCliente(clientes);
-						System.out.println("Ha elegido a: " + cli.getNombre() + " " + cli.getApellidos());
-					
-						// Pedimos al usuario que elija un producto para asignarlo al producto 1 
-						System.out.println("\nElija el primer producto:");
-						prod1 = nulo.elegirProducto(productos);
-						
-						// Pedimos al usuario la cantidad de producto 1 que tendrá el pedido. Si es mayor al stock disponible, se servirá la cantidad disponible de producto 1
-						System.out.println("Indique la cantidad que quiere de su producto 1: "+prod1.getNombre());				
-						cantidad1 = sc.nextInt();
-						
-						if(cantidad1 > prod1.mostrarStock()) {						
-							System.out.println("No puede comprar más de "+prod1.mostrarStock()+" unidades. Le serviremos el stock disponible, siendo " + prod1.mostrarStock());
-							cantidad1 = prod1.mostrarStock();						
-						}
+						if(cli.getTelefono() == 0) {
+							respuesta = 1;
+						} else {
+							System.out.println("Ha elegido a: " + cli.getNombre() + " " + cli.getApellidos());
 							
-						// El pedido puede estar compuesto por 1 o 2 productos. Preguntamos al usuario si quiere un segundo producto en el pedido. Si la respuesta es Yes, se elige el producto que será el producto 2 del pedido.
-						System.out.println("Quiere anyadir un segundo producto al pedido? Y/N");
-						String answer = sc.next();
-
-							if (answer.equalsIgnoreCase("y")) {
-								prod2 = nulo.elegirProducto(productos);
-								
-								// Pedimos al usuario la cantidad de producto 2 que tendrá el pedido. Si es mayor al stock disponible, se servirá la cantidad disponible de producto 1
-								System.out.println("Indique la cantidad que quiere de su producto 2: "+prod2.getNombre());				
-								cantidad2 = sc.nextInt();
-								
-								if(cantidad2 > prod2.mostrarStock()) {						
-									System.out.println("No puede comprar más de "+prod2.mostrarStock()+" unidades. Le serviremos el stock disponible, siendo " + prod2.mostrarStock());
-									cantidad2 = prod2.mostrarStock();						
-								}
-
-								// Calculamos el importe total del pedido en caso de tener dos productos
-								impor = (cantidad1 * prod1.getPrecio()) + (cantidad2 * prod2.getPrecio());
-								importeTotal = Math.round(impor * 100) / 100d;
-
-							} else {
-								prod2 = null;
-
-								// Calculamos el importe total del pedido en el caso de tener un solo producto
-								impor = (cantidad1 * prod1.getPrecio());
-								importeTotal = Math.round(impor * 100) / 100d;		
+							// Pedimos al usuario que elija un producto para asignarlo al producto 1 
+							System.out.println("\nElija el primer producto:");
+							prod1 = nulo.elegirProducto(productos);
+							
+							// Pedimos al usuario la cantidad de producto 1 que tendrá el pedido. Si es mayor al stock disponible, se servirá la cantidad disponible de producto 1
+							System.out.println("Indique la cantidad que quiere de su producto 1: "+prod1.getNombre());				
+							cantidad1 = sc.nextInt();
+							
+							if(cantidad1 > prod1.mostrarStock()) {						
+								System.out.println("No puede comprar más de "+prod1.mostrarStock()+" unidades. Le serviremos el stock disponible, siendo " + prod1.mostrarStock());
+								cantidad1 = prod1.mostrarStock();						
 							}
-							
-							// Con el método realizarPedido de la clase Cliente e introduciendo los parámetros necesarios, creamos y guardamos el pedido en la variable pedido
-							pedido = cli.realizarPedido(cli, prod1, cantidad1, prod2, cantidad2, importeTotal, 0, "NO PAGADO"); // Crea un pedido con esos atributos(cliente, producto 1, producto 2 si hay,
-																																//importe total y un codigodePago a 0 por estar sin pagar)
-							
-							// Mostramos el ticket del pedido con el método toString
-							System.out.println(pedido.toString());
+								
+							// El pedido puede estar compuesto por 1 o 2 productos. Preguntamos al usuario si quiere un segundo producto en el pedido. Si la respuesta es Yes, se elige el producto que será el producto 2 del pedido.
+							System.out.println("Quiere anyadir un segundo producto al pedido? Y/N");
+							String answer = sc.next();
 
-							// Una vez creado el pedido con todos sus atributos necesarios, mostramos al usuario las 5 posibles acciones que puede realizar.
-							// 1. Pagar  2. Eliminar Producto1  3. Eliminar Producto2  4. Agregar Producto1  5. Agregar Producto2
-							
-							int elec = 0;
-							do {
-								System.out.println("\n\nQue desea hacer? Seleccione el numero\n1.Pagar\n2.Eliminar Producto 1\n3.Eliminar Producto 2\n4.Agregar Producto 1\n5.Agregar Producto 2");
-								elec = sc.nextInt();
-								
-								// 1. Pagar
-								if (elec == 1) {  
-									PasarelaDePago pago = new PasarelaDePago(importeTotal); // Accedemos a la PasareladePago
-									cli.agregarPedido(pago.getCodigoPago()); // Añadimos al historial el pedido pagado con el método agregarPedido de la clase Cliente
+								if (answer.equalsIgnoreCase("y")) {
+									prod2 = nulo.elegirProducto(productos);
 									
-									// En caso de que no se haya pagado el pedido, se añadirá un 0 al historial
-									if (pago.getCodigoPago() != 0) {  // Una vez pagado el pedido y con codigoPago diferente a 0, procedemos a servir el pedido y actualizar el stock de cada producto
-										pedido.setPago(pago.getCodigoPago());								
-										pedido.setEstado("PAGADO");
-										System.out.println(pedido.getEstado());
-										pedido.setEstado("PREPARANDO");
-										System.out.println(pedido.getEstado());
-										pedido.setEstado("LISTO");
-										System.out.println(pedido.getEstado());
-										pedido.setEstado("SERVIDO");
-										System.out.println(pedido.getEstado());								
-										prod1.actualizarStock(cantidad1);								
-										prod1.mostrarStock();
-										
-										if (prod2 != null) {
-											prod2.actualizarStock(cantidad2);
-											prod2.mostrarStock();
-										}	
-										
-										System.out.println("Historial:" + cli.getHistorial());							
-										fichero.imprimirPedido(pedido);
-										
-									} else {
-										System.out.println("Pedido no pagado");
+									// Pedimos al usuario la cantidad de producto 2 que tendrá el pedido. Si es mayor al stock disponible, se servirá la cantidad disponible de producto 1
+									System.out.println("Indique la cantidad que quiere de su producto 2: "+prod2.getNombre());				
+									cantidad2 = sc.nextInt();
+									
+									if(cantidad2 > prod2.mostrarStock()) {						
+										System.out.println("No puede comprar más de "+prod2.mostrarStock()+" unidades. Le serviremos el stock disponible, siendo " + prod2.mostrarStock());
+										cantidad2 = prod2.mostrarStock();						
 									}
+
+									// Calculamos el importe total del pedido en caso de tener dos productos
+									impor = (cantidad1 * prod1.getPrecio()) + (cantidad2 * prod2.getPrecio());
+									importeTotal = Math.round(impor * 100) / 100d;
+
+								} else {
+									prod2 = null;
+
+									// Calculamos el importe total del pedido en el caso de tener un solo producto
+									impor = (cantidad1 * prod1.getPrecio());
+									importeTotal = Math.round(impor * 100) / 100d;		
 								}
 								
-								// 2. Eliminar Producto1
-								if (elec == 2) {									
-									if (pedido.getProducto1() != null) {	
-										pedido.eliminarProducto1();											
-									} else {										
-										System.out.println("El producto 1 no existe. Agregue un producto 1 al pedido");
-									}									
-								}
+								// Con el método realizarPedido de la clase Cliente e introduciendo los parámetros necesarios, creamos y guardamos el pedido en la variable pedido
+								pedido = cli.realizarPedido(cli, prod1, cantidad1, prod2, cantidad2, importeTotal, 0, "NO PAGADO"); // Crea un pedido con esos atributos(cliente, producto 1, producto 2 si hay,
+																																	//importe total y un codigodePago a 0 por estar sin pagar)
 								
-								// Eliminar Producto2
-								if (elec == 3) {								
-									if(pedido.getProducto2() != null) {									
-										pedido.eliminarProducto2();									
-									} else {									
-										System.out.println("El producto 2 no existe. Agregue un producto 2 al pedido");
-									}								
-								}
+								// Mostramos el ticket del pedido con el método toString
+								System.out.println(pedido.toString());
+
+								// Una vez creado el pedido con todos sus atributos necesarios, mostramos al usuario las 5 posibles acciones que puede realizar.
+								// 1. Pagar  2. Eliminar Producto1  3. Eliminar Producto2  4. Agregar Producto1  5. Agregar Producto2
 								
-								// 4. Agregar Producto 1
-								if (elec == 4) {								
-									if(pedido.getProducto1() == null) {									
-										System.out.println("\nElija el producto 1:");									
-										prod1 = nulo.elegirProducto(productos);
+								int elec = 0;
+								do {
+									System.out.println("\n\nQue desea hacer? Seleccione el numero\n1.Pagar\n2.Eliminar Producto 1\n3.Eliminar Producto 2\n4.Agregar Producto 1\n5.Agregar Producto 2");
+									elec = sc.nextInt();
+									
+									// 1. Pagar
+									if (elec == 1) {  
+										PasarelaDePago pago = new PasarelaDePago(importeTotal); // Accedemos a la PasareladePago
+										cli.agregarPedido(pago.getCodigoPago()); // Añadimos al historial el pedido pagado con el método agregarPedido de la clase Cliente
 										
-										// Pedimos al usuario la cantidad de producto 1 que tendrá el pedido. Si es mayor al stock disponible, se servirá la cantidad disponible de producto 1									
-										System.out.println("Indique la cantidad que quiere de su producto 1: "+prod1.getNombre());										
-										cantidad1 = sc.nextInt();
-										
-										if(cantidad1 > prod1.mostrarStock()) {										
-											System.out.println("No puede comprar más de "+prod1.mostrarStock()+" unidades. Le serviremos el stock disponible, siendo " + prod1.mostrarStock());
-											cantidad1 = prod1.mostrarStock();										
+										// En caso de que no se haya pagado el pedido, se añadirá un 0 al historial
+										if (pago.getCodigoPago() != 0) {  // Una vez pagado el pedido y con codigoPago diferente a 0, procedemos a servir el pedido y actualizar el stock de cada producto
+											pedido.setPago(pago.getCodigoPago());								
+											pedido.setEstado("PAGADO");
+											System.out.println(pedido.getEstado());
+											pedido.setEstado("PREPARANDO");
+											System.out.println(pedido.getEstado());
+											pedido.setEstado("LISTO");
+											System.out.println(pedido.getEstado());
+											pedido.setEstado("SERVIDO");
+											System.out.println(pedido.getEstado());								
+											prod1.actualizarStock(cantidad1);								
+											prod1.mostrarStock();
+											
+											if (prod2 != null) {
+												prod2.actualizarStock(cantidad2);
+												prod2.mostrarStock();
+											}	
+											
+											System.out.println("Historial:" + cli.getHistorial());							
+											fichero.imprimirPedido(pedido);
+											
+										} else {
+											System.out.println("Pedido no pagado");
+										}
+									}
+									
+									// 2. Eliminar Producto1
+									if (elec == 2) {									
+										if (pedido.getProducto1() != null) {	
+											pedido.eliminarProducto1();											
+										} else {										
+											System.out.println("El producto 1 no existe. Agregue un producto 1 al pedido");
+										}									
+									}
+									
+									// Eliminar Producto2
+									if (elec == 3) {								
+										if(pedido.getProducto2() != null) {									
+											pedido.eliminarProducto2();									
+										} else {									
+											System.out.println("El producto 2 no existe. Agregue un producto 2 al pedido");
+										}								
+									}
+									
+									// 4. Agregar Producto 1
+									if (elec == 4) {								
+										if(pedido.getProducto1() == null) {									
+											System.out.println("\nElija el producto 1:");									
+											prod1 = nulo.elegirProducto(productos);
+											
+											// Pedimos al usuario la cantidad de producto 1 que tendrá el pedido. Si es mayor al stock disponible, se servirá la cantidad disponible de producto 1									
+											System.out.println("Indique la cantidad que quiere de su producto 1: "+prod1.getNombre());										
+											cantidad1 = sc.nextInt();
+											
+											if(cantidad1 > prod1.mostrarStock()) {										
+												System.out.println("No puede comprar más de "+prod1.mostrarStock()+" unidades. Le serviremos el stock disponible, siendo " + prod1.mostrarStock());
+												cantidad1 = prod1.mostrarStock();										
+											}
+											
+										} else {							
+											System.out.println("El producto 1 ya esta elegido. Elimine el producto 1 para agregar otro.");							
 										}
 										
-									} else {							
-										System.out.println("El producto 1 ya esta elegido. Elimine el producto 1 para agregar otro.");							
+										pedido.setProducto1(prod1);
+										pedido.setCantidad1(cantidad1);
+										System.out.println(pedido.toString());
+
 									}
 									
-									pedido.setProducto1(prod1);
-									pedido.setCantidad1(cantidad1);
-									System.out.println(pedido.toString());
+									// 5. Agregar Producto2
 
-								}
-								
-								// 5. Agregar Producto2
-
-								if (elec == 5) {			
-									if (pedido.getProducto2() == null) {										
-										System.out.println("\nElija el producto 2:");										
-										prod2 = nulo.elegirProducto(productos);
+									if (elec == 5) {			
+										if (pedido.getProducto2() == null) {										
+											System.out.println("\nElija el producto 2:");										
+											prod2 = nulo.elegirProducto(productos);
+											
+											// Pedimos al usuario la cantidad de producto 2 que tendrá el pedido. Si es mayor al stock disponible, se servirá la cantidad disponible de producto 2										
+											System.out.println("Indique la cantidad que quiere de " + prod2.getNombre() + " (int menor de 30)");									
+											cantidad2 = sc.nextInt();
+									
+											if(cantidad2 > prod2.mostrarStock()) {								
+												System.out.println("No puede comprar más de "+prod2.mostrarStock()+" unidades. Le serviremos el stock disponible, siendo " + prod2.mostrarStock());
+												cantidad2 = prod2.mostrarStock();								
+											}							
+										} else {					
+											System.out.println("El producto 2 ya esta elegido. Elimine el producto 2 para agregar otro.");					
+										}
 										
-										// Pedimos al usuario la cantidad de producto 2 que tendrá el pedido. Si es mayor al stock disponible, se servirá la cantidad disponible de producto 2										
-										System.out.println("Indique la cantidad que quiere de " + prod2.getNombre() + " (int menor de 30)");									
-										cantidad2 = sc.nextInt();
-								
-										if(cantidad2 > prod2.mostrarStock()) {								
-											System.out.println("No puede comprar más de "+prod2.mostrarStock()+" unidades. Le serviremos el stock disponible, siendo " + prod2.mostrarStock());
-											cantidad2 = prod2.mostrarStock();								
-										}							
-									} else {					
-										System.out.println("El producto 2 ya esta elegido. Elimine el producto 2 para agregar otro.");					
-									}
-									
-									pedido.setProducto2(prod2);
-									pedido.setCantidad2(cantidad2);
-									System.out.println(pedido.toString());
-								}		
-							} while (elec != 1);
+										pedido.setProducto2(prod2);
+										pedido.setCantidad2(cantidad2);
+										System.out.println(pedido.toString());
+									}		
+								} while (elec != 1);
+						}
+
 				break;
 			}
 			case 2: {   // Crear un cliente nuevo
@@ -232,7 +237,7 @@ public class GestionPedidos {
 				Cliente nuevo = new Cliente();				
 				nuevo.rellenarCliente(nuevo);				 
 				clientes.add(nuevo);  // Guardamos el nuevo cliente en el array de clientes				
-				Fichero nuevoCliente = new Fichero();				
+				Fichero nuevoCliente = new Fichero();	// Creamos el archivo .txt con los datos del cliente			
 				nuevoCliente.crearCliente(nuevo);
 				
 				break;
@@ -245,7 +250,7 @@ public class GestionPedidos {
 				Producto nuevo = new Producto();								
 				nuevo.rellenarProducto(nuevo, productos);				 
 				productos.add(nuevo);  // Guardamos el nuevo cliente en el array de clientes				
-				Fichero nuevoProducto = new Fichero();				
+				Fichero nuevoProducto = new Fichero();	// Creamos el archivo .txt con los datos del producto				
 				nuevoProducto.crearProducto(nuevo);				
 				break;
 			}

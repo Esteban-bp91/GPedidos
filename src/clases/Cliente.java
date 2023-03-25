@@ -9,13 +9,15 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import herramientas.Fichero;
+
 
 /**
- * Clase Cliente GPedidos v0.3 
+ * Clase Cliente GPedidos v0.31 
  * 
  * @author EstebanBP
- * @version 0.3  
- * @since 16/03/2023
+ * @version 0.31  
+ * @since 25/03/2023
  * 
  * 
  * Funcionalidad lectura/escritura de archivos .txt para Clientes, Productos y Pedidos
@@ -267,20 +269,31 @@ public class Cliente {
 		}
 	}
 	
-	public Cliente asignarCliente(ArrayList<Cliente> clientes) {
+	public Cliente asignarCliente(ArrayList<Cliente> clientes) throws ParseException {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("\nEscriba el telefono del cliente:");
 		int telf = sc.nextInt();
 		Cliente cli = new Cliente();
-		do { // Buscamos el telefono del cliente que coincida con el introducido por el usuario						
+		
+		// Buscamos el telefono del cliente que coincida con el introducido por el usuario						
 			for (int j = 0; j < clientes.size(); j++) {							
 				if( telf == clientes.get(j).getTelefono()) {	
-					cli = clientes.get(j);								
+					cli = clientes.get(j);	
+					j = clientes.size();
 				}
-			}						
-		} while (cli.getTelefono() != telf);
-		
+			}
+			// Bucle if para crear un cliente nuevo si el telefono introducido no tiene coincidencias en el arrayList Clientes
+			if(cli.getTelefono() == 0) {
+				Scanner entrada = new Scanner(System.in);
+				System.out.println("No se ha encontrado ningun cliente con ese telefono. \nDesea crear el nuevo cliente? Y/N");
+				String ans = entrada.next();
+				if(ans.equalsIgnoreCase("y")) {
+					cli.rellenarCliente(cli);				 
+					clientes.add(cli);  // Guardamos el nuevo cliente en el array de clientes				
+					Fichero nuevoCliente = new Fichero();	// Creamos el archivo .txt con los datos del cliente			
+					nuevoCliente.crearCliente(cli);
+				}
+			}	
 		return cli;
 	}
-
 }
