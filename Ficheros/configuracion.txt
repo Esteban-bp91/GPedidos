@@ -1,0 +1,5 @@
+gpedidos
+localhost
+3310
+root
+1234

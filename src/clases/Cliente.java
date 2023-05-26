@@ -13,7 +13,9 @@ import java.util.Scanner;
 import excepciones.ExcepcionCuenta;
 import excepciones.ExcepcionTarjeta;
 import excepciones.ExcepcionTelefono;
+import herramientas.ConexionBD;
 import herramientas.Fichero;
+import herramientas.QueryBD;
 
 
 /**
@@ -253,6 +255,7 @@ public class Cliente implements Serializable{
 		System.out.println("\nEscriba el telefono del cliente:");
 		int telf = sc.nextInt();
 		Cliente cli = new Cliente();
+		QueryBD bd = new QueryBD();
 		
 		// Buscamos el telefono del cliente que coincida con el introducido por el usuario						
 			for (int j = 0; j < clientes.size(); j++) {							
@@ -269,8 +272,7 @@ public class Cliente implements Serializable{
 				if(ans.equalsIgnoreCase("y")) {
 					cli.rellenarCliente(cli, telf);
 					if(cli.getTelefono() != 0) {
-						Fichero f = new Fichero();
-						f.guardarCliente(cli, clientes); //Guardamos el nuevo cliente en el fichero Clientes
+						bd.guardarCliente(cli); //Guardamos el nuevo cliente en el fichero Clientes
 					}
 				} else {
 					cli = new Cliente("clienteNulo","N. N.","01/01/0001",0, "nula0", "0" );

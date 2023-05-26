@@ -6,8 +6,14 @@ import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import excepciones.ExcepcionImporte;
+import herramientas.ConexionBD;
+import herramientas.QueryBD;
 import herramientas.Fichero;
 import menus.Menu;
 import menus.MenuInicial;
@@ -21,7 +27,7 @@ import menus.MenuInicial;
  * 
  */
 
-public class ProgFinal {
+public class GPedidos {
 	
 	public static void main (String[] args) throws Exception {
 		Scanner sc = new Scanner(System.in);
@@ -33,7 +39,8 @@ public class ProgFinal {
 		Double impor;
 		Double importeTotal;
 		Pedido pedido;
-		
+		QueryBD bd = new QueryBD();
+				
 		//ArrayList para guardar los clientes 
 		ArrayList<Cliente> clientes = new ArrayList<Cliente>(); 
 		
@@ -43,38 +50,26 @@ public class ProgFinal {
 		//ArrayList para guardar las comidass ya registradas
 		ArrayList<Comida> comidas = new ArrayList<Comida>();
 		
-		 //Clientes para añadir al array en caso de que el metodo cargarClientes de Fichero no funcione
-		/*clientes.add(new Cliente("Alberto","AMOROS BASTIAS","14/05/2023",666666666,"Av. Purisima, 45, 03360","0"));
-		clientes.add(new Cliente("Ana","BAEZA PEREZ","14/05/2023",777777777,"C. Los Rosales, 4, 03360","0"));
-		clientes.add(new Cliente("Eli","GARCIA BERNA","14/05/2023",888888888,"Barrio San Jose, SN, 03360","0"));
-		clientes.add(new Cliente("Carlos","BANON CUIN","14/05/2023",666666777,"Av. Atzavares, 5, 03360","0"));
-		clientes.add(new Cliente("Daniel","CACERES DAMIAN","14/05/2023",666666888,"C. Virgen, 6, 03360","0"));
-		*/
-		
 		try {
-			// Cargamos los clientes de la carpeta Clientes
-			clientes = fichero.cargarClientes(clientes);	
+			// Cargamos los clientes de la base de datos
+			clientes = bd.cargarClientes(clientes);	
 			
-			//fichero.guardarClientes(clientes);  // Para guardar el arrayList de los clientes en el Fichero Clientes.dat
+			//bd.guardarClientes(clientes);  // Para guardar el arrayList de los clientes en la base de datos
 			
-			// Cargamos las bebidas de la carpeta Bebidas
-			bebidas = fichero.cargarBebidas(bebidas);
+			// Cargamos las bebidas de la base de datos
+			bebidas = bd.cargarBebidas(bebidas);
 			
-			//fichero.guardarBebidas(bebidas); // Para guardar el arrayList de las bebidas en el Fichero Bebidas.dat
+			//bd.guardarBebidas(bebidas); // Para guardar el arrayList de las bebidas en la base de datos
 					
 			// Cargamos las comidas de la carpeta Comidas
-			comidas = fichero.cargarComidas(comidas);
+			comidas = bd.cargarComidas(comidas);
 			
-			//fichero.guardarComidas(comidas); // Para guardar el arrayList de las comidas en el Fichero Comidas.dat
+			//bd.guardarComidas(comidas); // Para guardar el arrayList de las comidas en el Fichero Comidas.dat
 			
 		} catch (FileNotFoundException i) {
 			System.out.println("Error. No se encontró el archivo al cargar algún dato de entrada");
 		} catch(IOException e) {
 			System.out.println("Error. No se pudo leer correctamente algún dato de entrada");
-		} catch (ParseException f) {
-			System.out.println("Error. No se pudo cargar correctamente algún dato de entrada");
-		} catch (ClassNotFoundException c) {
-			System.out.println("Error. No se pudo cargar correctamente algun objeto de entrada");
 		}
 		
 		// Bucle Do que se realizará hasta que el usuario decida terminar el programa con la opción 4 del menú inicial
@@ -136,6 +131,7 @@ public class ProgFinal {
 						if (elec == 1) {  
 								cli.pagarPedido(cli,pedido,importeTotal,bebida,comida);
 								fichero.imprimirPedido(pedido);
+								bd.guardarPedido(cli, pedido);
 						}
 						
 						// 2. Eliminar Bebida
@@ -189,8 +185,8 @@ public class ProgFinal {
 				cli = new Cliente("clienteNulo","N. N.","01/01/0001", 600000000, "nula0", "0" ); //Establecemos el cliente cli con estos valores para no machacar el cliente elegido con anterioridad si ya se ha realizado un pedido
 				cli.rellenarCliente(cli);
 				if(cli.getTelefono() != 0) {
-					Fichero f = new Fichero();
-					f.guardarCliente(cli, clientes); //Guardamos el nuevo cliente en el fichero Clientes
+					clientes.add(cli);
+					bd.guardarCliente(cli); //Guardamos el nuevo cliente en la base de datos
 				}
 				break;
 			}
@@ -204,15 +200,13 @@ public class ProgFinal {
 					case 1: {
 						Bebida nuevaBebida = new Bebida(0,null, 0, null, null, 0, false, false, null); //Establecemos la bebida con estos valores para no machacar la bebida elegida con anterioridad si ya se ha realizado un pedido
 						nuevaBebida.rellenarBebida(nuevaBebida, bebidas);
-						Fichero f = new Fichero();
-						f.guardarBebida(nuevaBebida, bebidas); //Guardamos la nueva bebida en el fichero Bebidas
+						bd.guardarBebida(nuevaBebida); //Guardamos la nueva bebida en la base de datos
 						break;
 					}
 					case 2: {
 						Comida nuevaComida = new Comida(0,null,0,null,null,0,false,0,0,null); //Establecemos la bebida con estos valores para no machacar la bebida elegida con anterioridad si ya se ha realizado un pedido
 						nuevaComida.rellenarComida(nuevaComida, comidas);
-						Fichero f = new Fichero();
-						f.guardarComida(nuevaComida, comidas); //Guardamos la nueva bebida en el fichero Bebidas
+						bd.guardarComida(nuevaComida); //Guardamos la nueva bebida en la base de datos
 						break;
 					}
 					default:

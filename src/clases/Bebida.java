@@ -57,7 +57,7 @@ public class Bebida extends Producto {
 		this.lacteo = lacteo;
 		this.medida = medida;
 	}
-	
+		
 	@Override
 	public void obtenerCaducidad() {
 		System.out.println(calcularCaducidad());
@@ -80,7 +80,6 @@ public class Bebida extends Producto {
 	
 	
 	public void rellenarBebidatxt(File f, Bebida bebida) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MM yyyy");
 		try {
 			Scanner s = new Scanner(f);
 			String linea = s.nextLine();
