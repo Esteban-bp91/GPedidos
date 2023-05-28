@@ -15,19 +15,33 @@ import clases.Comida;
 import clases.Pedido;
 import excepciones.ExcepcionTelefono;
 
+/**
+ * Clase QueryBD del software GPedidos
+ * @author Esteban Baeza Pérez
+ * @version 0.4
+ * @since 27/05/2023
+ */
 public class QueryBD {
-	
+	//Parámetros necesarios para las querys a la base de datos
 	ConexionBD conexion = new ConexionBD();
 	Connection cn = null;
 	Statement stm = null;
 	ResultSet rs = null;
+	TestConexionBD testconexion = new TestConexionBD();
 	
 	private static String insertTableSQL;
-	private static String updateTableSQL;
 	
+	/**
+	 * Método cargarClientes(ArrayList<Cliente>) para cargar los clientes registrados en la base de datos
+	 * @param ArrayList<Cliente> clientes donde guardará los clientes cargados de la base de datos
+	 * @return el ArrayList<Cliente> clientes con los clientes cargados
+	 * @throws ExcepcionTelefono
+	 * @throws IOException
+	 */
 	public ArrayList<Cliente> cargarClientes(ArrayList<Cliente> clientes) throws ExcepcionTelefono, IOException {
 		try {
-			cn = conexion.conectar();
+			//cn = conexion.conectar();  IMPORTANTE: activar esta conexion para el funcionamiento normal del software
+			cn = testconexion.conectar();  // IMPORTANTE: activar esta conexion para realizar el test JUNIT guardarCliente(Cliente)
 			stm = cn.createStatement();
 			rs = stm.executeQuery("SELECT * FROM cliente");
 				while(rs.next()) {
@@ -57,10 +71,16 @@ public class QueryBD {
 			}
 		}
 		return clientes;
-	}
+	} //Cierre del Método cargarClientes(ArrayList<Cliente>)
 	
+	/**
+	 * Método guardarCliente(Cliente) guardará el cliente pasado como parámetro en la base de datos
+	 * @param cli es el cliente a guardar en la base de datos
+	 * @throws Exception
+	 */
 	public void guardarCliente(Cliente cli) throws Exception {
-		ConexionBD conexion = new ConexionBD();
+		//ConexionBD conexion = new ConexionBD();
+		TestConexionBD conexion = new TestConexionBD(); // IMPORTANTE: Usamos esta conexion para los test JUNIT
 		Connection cn = null;
 		PreparedStatement ps = null;
 		insertTableSQL = "INSERT INTO cliente (telefono,nombre,apellidos,fecha_alta,direccion) VALUES (?,?,?,?,?)";
@@ -76,9 +96,9 @@ public class QueryBD {
 
 			System.out.println("El registro ha sido insertado con exito en la base de datos");
 
-		} catch (SQLException e) { // TODO: handle exception
+		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally { // Liberar recursos revisar el orden en el que se cierran
+		} finally { // Liberar recurso
 			try {
 				if (ps != null) {
 					ps.close();
@@ -90,12 +110,21 @@ public class QueryBD {
 				e2.printStackTrace();
 			}
 		}	
-	}
+	} //Cierre de Método guardarCliente(Cliente)
 	
+	
+	/**
+	 * Método cargarBebidas(ArrayList<Bebida>) cargará las bebidas registradas en la base de datos
+	 * @param bebidas será el ArrayList donde guardar las bebidas cargadas
+	 * @return bebidas con las bebidas guardadas
+	 * @throws ExcepcionTelefono
+	 * @throws IOException
+	 */
 	public ArrayList<Bebida> cargarBebidas(ArrayList<Bebida> bebidas) throws ExcepcionTelefono, IOException {
 		try {
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-			cn = conexion.conectar();
+			//cn = conexion.conectar();  // IMPORTANTE: activar esta conexion para el funcionamiento normal del software
+			cn = testconexion.conectar();  // IMPORTANTE: activar esta conexion para realizar el test JUNIT guardarBebida(Bebida)
 			stm = cn.createStatement();
 			rs = stm.executeQuery("SELECT * FROM bebida");
 				while(rs.next()) {
@@ -121,14 +150,21 @@ public class QueryBD {
 			}
 		}
 		return bebidas;
-	}
+	} //Cierre del Método cargarBebidas(ArrayList<Bebida>)
 	
+	
+	/**
+	 * Método guardarBebida(Bebida) para guardar la bebida pasada como parámetro en la base de datos
+	 * @param b es la bebida a guardar en la base de datos
+	 * @throws Exception
+	 */
 	public void guardarBebida(Bebida b) throws Exception {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		ConexionBD conexion = new ConexionBD();
+		//ConexionBD conexion = new ConexionBD();
+		TestConexionBD conexion = new TestConexionBD(); // IMPORTANTE: Usamos esta conexion a la base de datos testgpedidos para los test JUNIT
 		Connection cn = null;
 		PreparedStatement ps = null;
-		insertTableSQL = "INSERT INTO bebida (codigo, nombre, precio, fecha_caducidad, estado, cantidad, gaseoso, lacteo, medida) VALUES (?,?,?,?,?,?,?,?,?)";
+		insertTableSQL = "INSERT INTO bebida (codigo, nombre, precio, fecha_caducidad, estado, gaseoso, lacteo, medida) VALUES (?,?,?,?,?,?,?,?)";
 		try {
 			cn = conexion.conectar();
 			ps = cn.prepareStatement(insertTableSQL);
@@ -137,17 +173,16 @@ public class QueryBD {
 			ps.setDouble(3, b.getPrecio());
 			ps.setString(4, formatter.format(b.getFecha_caducidad()));
 			ps.setString(5, b.getEstado());
-			ps.setInt(6, 0);
-			ps.setBoolean(7, b.isGaseoso());
-			ps.setBoolean(8, b.isLacteo());
-			ps.setString(9, b.getMedida());
+			ps.setBoolean(6, b.isGaseoso());
+			ps.setBoolean(7, b.isLacteo());
+			ps.setString(8, b.getMedida());
 			ps.executeUpdate();
 
 			System.out.println("El registro ha sido insertado con exito en la base de datos");
 
-		} catch (SQLException e) { // TODO: handle exception
+		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally { // Liberar recursos revisar el orden en el que se cierran
+		} finally { 
 			try {
 				if (ps != null) {
 					ps.close();
@@ -159,125 +194,21 @@ public class QueryBD {
 				e2.printStackTrace();
 			}
 		}	
-	}
+	} //Cierre del Método guardarBebida(Bebida)
+
 	
-	public void guardarBebidas(ArrayList<Bebida> bebidas) throws Exception {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		ConexionBD conexion = new ConexionBD();
-		Connection cn = null;
-		PreparedStatement ps = null;
-		insertTableSQL = "INSERT INTO bebida (codigo, nombre, precio, fecha_caducidad, estado, gaseoso, lacteo, medida) VALUES (?,?,?,?,?,?,?,?)";
-		try {
-			cn = conexion.conectar();
-			ps = cn.prepareStatement(insertTableSQL);
-			for(int i = 0; i < bebidas.size();i++) {
-				ps.setInt(1, bebidas.get(i).getCodigo());
-				ps.setString(2, bebidas.get(i).getNombre());
-				ps.setDouble(3, bebidas.get(i).getPrecio());
-				ps.setString(4, formatter.format(bebidas.get(i).getFecha_caducidad()));
-				ps.setString(5, bebidas.get(i).getEstado());
-				ps.setBoolean(6, bebidas.get(i).isGaseoso());
-				ps.setBoolean(7, bebidas.get(i).isLacteo());
-				ps.setString(8, bebidas.get(i).getMedida());
-				ps.executeUpdate();
-			}
-
-			System.out.println("El registro ha sido insertado con exito en la base de datos");
-
-		} catch (SQLException e) { // TODO: handle exception
-			e.printStackTrace();
-		} finally { // Liberar recursos revisar el orden en el que se cierran
-			try {
-				if (ps != null) {
-					ps.close();
-				}
-				if (cn != null) {
-					cn.close();
-				}
-			} catch (Exception e2) {
-				e2.printStackTrace();
-			}
-		}	
-	}
-	
-	public void guardarClientes(ArrayList<Cliente> clientes) throws Exception {
-		ConexionBD conexion = new ConexionBD();
-		Connection cn = null;
-		PreparedStatement ps = null;
-		insertTableSQL = "INSERT INTO cliente (telefono,nombre,apellidos,fecha_alta,direccion) VALUES (?,?,?,?,?)";
-		try {
-			cn = conexion.conectar();
-			ps = cn.prepareStatement(insertTableSQL);
-			for(int i = 0; i < clientes.size();i++) {
-				ps.setInt(1, clientes.get(i).getTelefono());
-				ps.setString(2, clientes.get(i).getNombre());
-				ps.setString(3, clientes.get(i).getApellidos());
-				ps.setString(4, clientes.get(i).getFechaDeAlta());
-				ps.setString(5, clientes.get(i).getDireccion());
-				ps.executeUpdate();
-			}
-			System.out.println("El registro ha sido insertado con exito en la base de datos");
-
-		} catch (SQLException e) { // TODO: handle exception
-			e.printStackTrace();
-		} finally { // Liberar recursos revisar el orden en el que se cierran
-			try {
-				if (ps != null) {
-					ps.close();
-				}
-				if (cn != null) {
-					cn.close();
-				}
-			} catch (Exception e2) {
-				e2.printStackTrace();
-			}
-		}	
-	}
-	
-	public void guardarComidas(ArrayList<Comida> comidas) throws Exception {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		ConexionBD conexion = new ConexionBD();
-		Connection cn = null;
-		PreparedStatement ps = null;
-		insertTableSQL = "INSERT INTO comida (codigo, nombre, precio, fecha_caducidad, estado, perecedero, calorias, vegano, fecha_envase) VALUES (?,?,?,?,?,?,?,?,?)";
-		try {
-			cn = conexion.conectar();
-			ps = cn.prepareStatement(insertTableSQL);
-			for(int i = 0; i < comidas.size();i++) {
-				ps.setInt(1, comidas.get(i).getCodigo());
-				ps.setString(2, comidas.get(i).getNombre());
-				ps.setDouble(3, comidas.get(i).getPrecio());
-				ps.setString(4, formatter.format(comidas.get(i).getFecha_caducidad()));
-				ps.setString(5, comidas.get(i).getEstado());
-				ps.setBoolean(6, comidas.get(i).isPerecedero());
-				ps.setFloat(7, comidas.get(i).getCalorias());
-				ps.setFloat(8, comidas.get(i).getVegano());
-				ps.setString(9, formatter.format(comidas.get(i).getFecha_envase()));
-				ps.executeUpdate();
-			}
-
-			System.out.println("El registro ha sido insertado con exito en la base de datos");
-
-		} catch (SQLException e) { // TODO: handle exception
-			e.printStackTrace();
-		} finally { // Liberar recursos revisar el orden en el que se cierran
-			try {
-				if (ps != null) {
-					ps.close();
-				}
-				if (cn != null) {
-					cn.close();
-				}
-			} catch (Exception e2) {
-				e2.printStackTrace();
-			}
-		}	
-	}
-	
+	/**
+	 * Método cargarComidas(ArrayList<Comida>) cargará las comidas registradas en la base de datos
+	 * @param comidas es el ArrayList donde guardar las comidas cargadas
+	 * @return comidas con todas las comidas guardadas dentro de este ArrayList
+	 * @throws ExcepcionTelefono
+	 * @throws IOException
+	 */
 	public ArrayList<Comida> cargarComidas(ArrayList<Comida> comidas) throws ExcepcionTelefono, IOException {
 		try {
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-			cn = conexion.conectar();
+			//cn = conexion.conectar();  // IMPORTANTE: activar esta conexion para el funcionamiento normal del software
+			cn = testconexion.conectar();  // IMPORTANTE: activar esta conexion para realizar el test JUNIT guardarComida(Comida)
 			stm = cn.createStatement();
 			rs = stm.executeQuery("SELECT * FROM comida");
 				while(rs.next()) {
@@ -303,11 +234,17 @@ public class QueryBD {
 			}
 		}
 		return comidas;
-	}
+	} //Cierre del Método cargarComidas(ArrayList<Comida>)
 	
+	/**
+	 * Método guardarComida(Comida) registrará la comida pasada como parámetro en la base de datos
+	 * @param c es la comida a guardar en la base de datos
+	 * @throws Exception
+	 */
 	public void guardarComida(Comida c) throws Exception {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		ConexionBD conexion = new ConexionBD();
+		//ConexionBD conexion = new ConexionBD();
+		TestConexionBD conexion = new TestConexionBD(); // IMPORTANTE: Usamos esta conexion a la base de datos testgpedidos para los test JUNIT
 		Connection cn = null;
 		PreparedStatement ps = null;
 		insertTableSQL = "INSERT INTO comida (codigo, nombre, precio, fecha_caducidad, estado, perecedero, calorias, vegano, fecha_envase) VALUES (?,?,?,?,?,?,?,?,?)";
@@ -324,13 +261,12 @@ public class QueryBD {
 				ps.setFloat(8, c.getVegano());
 				ps.setString(9, formatter.format(c.getFecha_envase()));
 				ps.executeUpdate();
-			
 
 			System.out.println("El registro ha sido insertado con exito en la base de datos");
 
-		} catch (SQLException e) { // TODO: handle exception
+		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally { // Liberar recursos revisar el orden en el que se cierran
+		} finally {
 			try {
 				if (ps != null) {
 					ps.close();
@@ -342,18 +278,24 @@ public class QueryBD {
 				e2.printStackTrace();
 			}
 		}	
-	}
+	} //Cierre del Método guardarComida(Comida)
 	
-	public void guardarPedido(Cliente c, Pedido p) throws Exception {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		ConexionBD conexion = new ConexionBD();
+	/**
+	 * Método guardarPedido(Cliente, Pedido) registrará el pedido en la base de datos
+	 * @param c es el cliente que realiza el pedido
+	 * @param p es el pedido a guardar en la base de datos
+	 * @throws Exception
+	 */
+	public void guardarPedido(Pedido p) throws Exception {
+		//ConexionBD conexion = new ConexionBD();
+		TestConexionBD conexion = new TestConexionBD(); // IMPORTANTE: Usamos esta conexion a la base de datos testgpedidos para los test JUNIT		
 		Connection cn = null;
 		PreparedStatement ps = null;
 		insertTableSQL = "INSERT INTO pedido (num_cliente, cod_bebida,cantidad_bebida,cod_comida,cantidad_comida,importeTotal,codigoPago,estado) VALUES (?,?,?,?,?,?,?,?)";
 		try {
 			cn = conexion.conectar();
 			ps = cn.prepareStatement(insertTableSQL);
-				ps.setInt(1, c.getTelefono());
+				ps.setInt(1, p.getCliente().getTelefono());
 				ps.setInt(2, p.getBebida().getCodigo());
 				ps.setInt(3, p.getBebida().getCantidad());
 				ps.setInt(4, p.getComida().getCodigo());
@@ -365,9 +307,9 @@ public class QueryBD {
 
 			System.out.println("El registro ha sido insertado con exito en la base de datos");
 
-		} catch (SQLException e) { // TODO: handle exception
+		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally { // Liberar recursos revisar el orden en el que se cierran
+		} finally {
 			try {
 				if (ps != null) {
 					ps.close();
@@ -379,5 +321,6 @@ public class QueryBD {
 				e2.printStackTrace();
 			}
 		}	
-	}
-}
+	} //Cierre del Método guardarPedido(Cliente, Pedido)
+	
+}//Cierre de la clase QueryBD

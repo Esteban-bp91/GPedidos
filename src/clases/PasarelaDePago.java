@@ -6,37 +6,30 @@ import java.util.Scanner;
 import excepciones.ExcepcionCuenta;
 import excepciones.ExcepcionTarjeta;
 
-
 /**
- * Clase PasarelaDePago de la práctica final de Programación de 1º DAW - Curso 2022/2023
- * 
+ * Clase PasarelaDePago del software GPedidos
  * @author Esteban Baeza Pérez
- * @version 0.1 
- * @since 25/04/2023
+ * @version 0.4
+ * @since 27/05/2023
  * 
  */
 
 public class PasarelaDePago {
 	
-	// Atributos de la clase PasarelaDePago
-
-	private double importe;
-	private long codigoPago;
+	// Parámetros de la clase PasarelaDePago
+	private double importe; //Importe del pedido
+	private long codigoPago; // El código de pago 
 	
 	// Getters and setters
-
 	public double getImporte() {
 		return importe;
 	}
-
 	public void setImporte(double importe) {
 		this.importe = importe;
 	}
-
 	public long getCodigoPago() {
 		return codigoPago;
 	}
-
 	public void setCodigoPago(long codigoPago) {
 		this.codigoPago = codigoPago;
 	}
@@ -47,18 +40,19 @@ public class PasarelaDePago {
 	 */
 	public PasarelaDePago(double importe) {
 		this.importe = importe;
-	}
+	} //Cierre del constructor PasarelaDePago
 	
-	// Método pagar para poder seleccionar el método de pago
+	/**
+	 *  Método pagar() para poder seleccionar el método de pago
+	 * @throws ExcepcionCuenta
+	 * @throws ExcepcionTarjeta
+	 */
 	public void pagar() throws ExcepcionCuenta, ExcepcionTarjeta {
 		
 		int metodo;
 		String numero;
-		
 		Scanner scanner = new Scanner(System.in);
-		
 		System.out.println("Introduzca el metodo de pago: \n1. Efectivo \n2. Tarjeta \n3. Cuenta bancaria");
-
 		metodo = scanner.nextInt();
 		String saltodelinea = scanner.nextLine(); // Guardamos aquí el salto de carro para evitar errores
 		
@@ -82,7 +76,11 @@ public class PasarelaDePago {
 		}
 	}
 	
-	// Método Efectivo sirve para pagar el pedido con efectivo y nos devuelve el código de pago @return
+	/**
+	 *  Método Efectivo(double) sirve para pagar el pedido con efectivo
+	 * @param importe del pedido a pagar
+	 * @return nos devuelve el código de pago
+	 */
 	public long Efectivo(double importe) {
 		this.importe = importe;
 		int B500 = 0, B200 = 0, B100 = 0, B50 = 0, B20 = 0, B10 = 0, B5 = 0, M2 = 0, M1 = 0, C50 = 0, C20 = 0, C10 = 0,
@@ -175,10 +173,14 @@ public class PasarelaDePago {
 		System.out.println("Codigo de pago: " + codigoPago);
 		
 		return codigoPago;
-	}
+	} //Cierre del Método Efectivo(double)
 	
-	// Método Tarjeta sirve para pagar el pedido con tarjeta y nos devuelve el código de pago @return
-
+	/**
+	 *  Método Tarjeta(String) sirve para pagar el pedido con tarjeta
+	 * @param número de tarjeta
+	 * @return nos devuelve el código de pago
+	 * @throws ExcepcionTarjeta
+	 */
 	public long Tarjeta(String tarjeta) throws ExcepcionTarjeta {
 
 		boolean pagado = false;
@@ -272,10 +274,14 @@ public class PasarelaDePago {
 			System.out.println(codigoPago);
 		}
 		return codigoPago; // Devolvemos el codigo de pago, si no esta pagado devolverá 0
-	}
+	} //Cierre del Método Tarjeta(String)
 	
-	// Método Cuenta sirve para pagar el pedido con una cuenta bancaria y nos devuelve el código de pago @return
-
+	/**
+	 *  Método Cuenta(String) sirve para pagar el pedido con una cuenta bancaria
+	 * @param número de cuenta bancaria
+	 * @return nos devuelve el código de pago
+	 * @throws ExcepcionCuenta
+	 */
 	public long Cuenta(String c) throws ExcepcionCuenta {
 		boolean pagado = false;
 		setCodigoPago(0); // Establecemos el codigo de pago a 0
@@ -292,6 +298,6 @@ public class PasarelaDePago {
 		}
 
 		return codigoPago;
-	}
+	} //Cierre del Método Cuenta(String)
 
-}
+} //Cierre de la clase PasarelaDePago

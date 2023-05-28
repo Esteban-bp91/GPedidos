@@ -3,16 +3,18 @@ package menus;
 import java.util.Scanner;
 
 /**
- * Clase MenuInicial de la práctica final de Programación de 1º DAW - Curso 2022/2023
- * 
+ * Clase MenuInicial del software GPedidos
  * @author Esteban Baeza Pérez
- * @version 0.1 
- * @since 25/04/2023
- * 
+ * @version 0.4 
+ * @since 27/05/2023
+ * @see Clase Menu
  */
-
 public class MenuInicial extends Menu{
-
+	
+	/**
+	 * Método elegir() para elegir la tarea a realizar
+	 * @return un entero con la tarea correspondiente a realizar
+	 */
 	@Override
 	public int elegir() {
 		Scanner sc = new Scanner(System.in);
@@ -24,8 +26,5 @@ public class MenuInicial extends Menu{
 
 		seleccion = sc.nextInt();
 		return seleccion;
-	}
-	
-	
-
-}
+	} //Cierre del método elegir()
+}//Cierre de la clase MenuInicial

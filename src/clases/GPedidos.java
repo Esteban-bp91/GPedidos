@@ -19,35 +19,36 @@ import menus.Menu;
 import menus.MenuInicial;
 
 /**
- * Clase ProgFinal (main) de la práctica final de Programación de 1º DAW - Curso 2022/2023
+ * Clase GPedidos (main) del software GPedidos
  * 
  * @author Esteban Baeza Pérez
- * @version 0.1 
- * @since 25/04/2023
+ * @version 0.4
+ * @since 27/05/2023
  * 
  */
 
 public class GPedidos {
 	
 	public static void main (String[] args) throws Exception {
+		//Parámetros necesarios
 		Scanner sc = new Scanner(System.in);
 		int tarea; // Variable donde guardaremos la tarea a realizar al ejecutar un menú
 		Cliente cli = new Cliente("clienteNulo","N. N.","01/01/0001", 600000000, "nula0", "0" ); //Cliente nulo para iniciar el programa antes de asignar un cliente al pedido que se va a crear
-		Fichero fichero = new Fichero();
-		Bebida bebida = new Bebida(0,null, 0, null, null, 0, false, false, null);
-		Comida comida = new Comida(0,null,0,null,null,0,false,0,0,null);
-		Double impor;
-		Double importeTotal;
-		Pedido pedido;
-		QueryBD bd = new QueryBD();
+		Fichero fichero = new Fichero(); // Fichero
+		Bebida bebida = new Bebida(0,null, 0, null, null, 0, false, false, null); //Bebida nula para iniciar el software antes de asignar una bebida al pedido que se va a crear
+		Comida comida = new Comida(0,null,0,null,null,0,false,0,0,null); //Comida nula para iniciar el software antes de asignar una comida al pedido que se va a crear
+		Double impor; // Importe total del pedido sin redondear
+		Double importeTotal; //Importe total del pedido con dos decimales
+		Pedido pedido; // Pedido
+		QueryBD bd = new QueryBD(); // QueryBD para las consultas a la base de datos
 				
 		//ArrayList para guardar los clientes 
 		ArrayList<Cliente> clientes = new ArrayList<Cliente>(); 
 		
-		//ArrayList para guardar las bebidas ya registradas
+		//ArrayList para guardar las bebidas
 		ArrayList<Bebida> bebidas = new ArrayList<Bebida>();
 		
-		//ArrayList para guardar las comidass ya registradas
+		//ArrayList para guardar las comidass
 		ArrayList<Comida> comidas = new ArrayList<Comida>();
 		
 		try {
@@ -61,10 +62,10 @@ public class GPedidos {
 			
 			//bd.guardarBebidas(bebidas); // Para guardar el arrayList de las bebidas en la base de datos
 					
-			// Cargamos las comidas de la carpeta Comidas
+			// Cargamos las comidas de la base de datos
 			comidas = bd.cargarComidas(comidas);
 			
-			//bd.guardarComidas(comidas); // Para guardar el arrayList de las comidas en el Fichero Comidas.dat
+			//bd.guardarComidas(comidas); // Para guardar el arrayList de las comidas en la base de datos
 			
 		} catch (FileNotFoundException i) {
 			System.out.println("Error. No se encontró el archivo al cargar algún dato de entrada");
@@ -131,7 +132,7 @@ public class GPedidos {
 						if (elec == 1) {  
 								cli.pagarPedido(cli,pedido,importeTotal,bebida,comida);
 								fichero.imprimirPedido(pedido);
-								bd.guardarPedido(cli, pedido);
+								bd.guardarPedido(pedido);
 						}
 						
 						// 2. Eliminar Bebida
@@ -185,7 +186,7 @@ public class GPedidos {
 				cli = new Cliente("clienteNulo","N. N.","01/01/0001", 600000000, "nula0", "0" ); //Establecemos el cliente cli con estos valores para no machacar el cliente elegido con anterioridad si ya se ha realizado un pedido
 				cli.rellenarCliente(cli);
 				if(cli.getTelefono() != 0) {
-					clientes.add(cli);
+					clientes.add(cli); // Añadimos el nuevo cliente al ArrayList clientes
 					bd.guardarCliente(cli); //Guardamos el nuevo cliente en la base de datos
 				}
 				break;
@@ -225,5 +226,5 @@ public class GPedidos {
 			}
 		} while (tarea != 4); 
 		 System.out.println("\nPrograma terminado"); 
-	}
-}
+	} // Cierre del main
+} //Cierre de la clase GPedidos

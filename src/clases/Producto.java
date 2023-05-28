@@ -4,16 +4,15 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 /**
- * Clase Producto de la práctica final de Programación de 1º DAW - Curso 2022/2023
- * 
+ * Clase Producto del software GPedidos
  * @author Esteban Baeza Pérez
- * @version 0.1 
- * @since 25/04/2023
+ * @version 0.4
+ * @since 27/05/2023
  * 
  */
 
 public abstract class Producto implements Serializable{
-	
+	//Parámetros de la clase Producto
 	protected int codigo;
 	protected String nombre;
 	protected double precio;
@@ -22,8 +21,7 @@ public abstract class Producto implements Serializable{
 	protected int cantidad;
 	protected int stock[] = new int[30]; 
 
-	
-
+	// Getters and setters
 	public int getCodigo() {
 		return codigo;
 	}
@@ -67,6 +65,15 @@ public abstract class Producto implements Serializable{
 		this.stock = stock;
 	}
 	
+	/**
+	 * Constructor de la superclase Producto
+	 * @param codigo identifica la instancia de la comida
+	 * @param nombre especifica el nombre de la comida
+	 * @param precio especifica el precio de la comida
+	 * @param fecha_caducidad especifica la fecha de caducidad de la comida
+	 * @param estado especifica el estado de la comida
+	 * @param cantidad especifica la cantidad de la comida que tendrá el pedido
+	 */
 	public Producto(int codigo, String nombre, double precio, LocalDate fecha_caducidad, String estado, int cantidad) {
 		this.codigo = codigo;
 		this.nombre = nombre;
@@ -74,14 +81,27 @@ public abstract class Producto implements Serializable{
 		this.fecha_caducidad = fecha_caducidad;
 		this.estado = estado;
 		this.cantidad = cantidad;
-	}
+	} //Cierre del constructor Producto
 	
+	/**
+	 * Método abstracto obtenerCaducidad()
+	 */
 	public abstract void obtenerCaducidad();
 	
+	/**
+	 * Método abstracto detalleProducto()
+	 */
 	public abstract void detalleProducto();
-
+	
+	/**
+	 * Método abstracto calcularCaducidad()
+	 */
 	public abstract LocalDate calcularCaducidad();
 	
+	/**
+	 * Método mostrarStock() para saber cuantas unidades hay disponibles de un producto
+	 * @return el valor entero de la cantidad que hay disponible de un producto
+	 */
 	public int mostrarStock() {
 		int e = 0;
 		for (int i = 0; i < stock.length; i++) {
@@ -90,15 +110,21 @@ public abstract class Producto implements Serializable{
 			}			
 		}
 		return 30-e;
-	}
+	} //Cierre del Método mostrarStock()
 	
+	/**
+	 * Método llenarStock() llena el array Stock al completo con unos
+	 */
 	public void llenarStock() {
 		for (int i = 0; i < stock.length; i++) {
 			stock[i] = 1;
 		}
-	}
+	} //Cierre del Método llenarStock()
 	
-	// Método actualizarStock modifica el array stock eliminando tantos 1 como unidades del producto se hayan comprado
+	/**
+	 *  Método actualizarStock(int) modifica el array stock eliminando tantos 1 como unidades del producto se hayan comprado
+	 * @param int cantidad es la cantidad a restar al stock
+	 */
 	public void actualizarStock(int cantidad) {
 		int e = 0;
 		
@@ -115,5 +141,5 @@ public abstract class Producto implements Serializable{
 			stock[e] = 0;
 			e--;
 		}
-	}
+	} //Cierre del Método actualizarStock(int)
 }

@@ -10,22 +10,23 @@ import java.util.Scanner;
 
 import menus.CartaComidas;
 
+
 /**
- * Clase Comida de la práctica final de Programación de 1º DAW - Curso 2022/2023
- * 
+ * Clase Comida del software GPedidos
  * @author Esteban Baeza Pérez
- * @version 0.1 
- * @since 25/04/2023
- * 
+ * @version 0.4
+ * @since 27/05/2023
+ * @see Clase Producto
  */
 
 public class Comida extends Producto{
-	
-	private boolean perecedero; //Este atributo me indica si el alimento debe consumirse con inmediatez
+	// Parámetros de la subclase Comida
+	private boolean perecedero; //Indica si el alimento debe consumirse con inmediatez
 	private float calorias; //Indica las calorías que tiene el alimento
 	private float vegano; //True o 0, si el alimento se considera vegano
 	private LocalDate fecha_envase; //Fecha de envasado del alimento
-		
+	
+	//Getters and setters
 	public boolean isPerecedero() {
 		return perecedero;
 	}
@@ -56,7 +57,20 @@ public class Comida extends Producto{
 	public void setStock(int[] stock) {
 		this.stock = stock;
 	}
-
+	
+	/**
+	 * Constructor de la subclase Comida
+	 * @param codigo identifica la instancia de la comida
+	 * @param nombre especifica el nombre de la comida
+	 * @param precio especifica el precio de la comida
+	 * @param fecha_caducidad especifica la fecha de caducidad de la comida
+	 * @param estado especifica el estado de la comida
+	 * @param cantidad especifica la cantidad de la comida que tendrá el pedido
+	 * @param perecedero especifica si la comida es perecedera o no
+	 * @param calorias especifica las calorias de la comida
+	 * @param vegano especifica si la comida es vegana o no
+	 * @param fecha_envase especifica la fecha de envase de la comida
+	 */
 	public Comida(int codigo, String nombre, double precio, LocalDate fecha_caducidad, String estado,int cantidad, boolean perecedero, float calorias,
 			float vegano, LocalDate fecha_envase) {
 		super(codigo, nombre, precio, fecha_caducidad, estado, cantidad);
@@ -64,55 +78,42 @@ public class Comida extends Producto{
 		this.calorias = calorias;
 		this.vegano = vegano;
 		this.fecha_envase = fecha_envase;
-	}
+	} //Cierre del constructor Comida
 	
+	/**
+	 * Método obtenerCaducidad() imprime por pantalla la fecha de caducidad
+	 */
 	public void obtenerCaducidad() {
 		System.out.println(calcularCaducidad());
-	}
+	} //Cierre del método obtenerCaducidad()
 
+	/**
+	 * Método calcularCaducidad() establece la fecha de caducidad de la comida según sea perecedera o no
+	 * @return la fecha de caducidad de la comida
+	 */
 	@Override
 	public LocalDate calcularCaducidad() {
 		if(perecedero == true) {
 			fecha_caducidad = fecha_envase.plusDays(10);
 		} else {
-			fecha_caducidad = LocalDate.now().plusDays(3); //Establecemos esta fecha de caducidad para que se muestre el producto en oferta con el nuevo precio
+			fecha_caducidad = LocalDate.now().plusDays(3);
 		}
 	return fecha_caducidad;
-	}
-
+	} // Cierre del método calcularCaducidad()
+	
+	/**
+	 * Método detalleProducto() imprime por pantalla los parámetros de la instancia 
+	 */
 	@Override
 	public void detalleProducto() {
 		System.out.println("Nombre: "+nombre+"\nPrecio: "+precio+"\nFecha de caducidad: "+fecha_caducidad+"\nEstado: "+estado+"\nPerecedero: "+perecedero+"\nCalorias: "+calorias+"\nVegano: "+vegano+"\nFecha de envase: "+fecha_envase);
-	}
+	} //Cierre del método detalleProducto()
 	
-	public void rellenarComida(File f, Comida comida) {
-		try {
-			Scanner s = new Scanner(f);
-			String linea = s.nextLine();
-			Scanner sl = new Scanner(linea);
-			sl.useDelimiter("\\s*;\\s*");
-			comida.setCodigo(sl.nextInt());
-			comida.setNombre(sl.next());
-			comida.setPrecio(sl.nextDouble());
-			comida.setEstado(sl.next());
-			comida.setPerecedero(sl.nextBoolean());
-			comida.setCalorias(sl.nextFloat());
-			comida.setVegano(sl.nextFloat());
-			comida.setFecha_envase(LocalDate.now());
-			comida.setFecha_caducidad(comida.calcularCaducidad());
-			comida.llenarStock();
-			
-		
-		} catch (FileNotFoundException e) {
-			// PrintWriter pw = null;
-			e.printStackTrace();
-			// e.printStackTrace(pw);
-
-		}
-		
-	}
-	
-	public Comida elegirComida(ArrayList<Comida> comidas) {  // Método para elegir una bebida
+	/**
+	 * Método elegirComiuda(ArrayList<Comida>) para elegir una comida del ArrayList
+	 * @return la comida elegida con la cantidad establecida para el pedido
+	 */
+	public Comida elegirComida(ArrayList<Comida> comidas) {  // Método para elegir una comida
 		Comida comida = null;
 		Scanner sc = new Scanner(System.in);
 		try {
@@ -156,10 +157,12 @@ public class Comida extends Producto{
 			System.out.println("Cantidad elegida incorrecta");
 			cant.printStackTrace();
 		}
-		
 		return comida;
-	}
+	} // Cierre del método elegirComiuda(ArrayList<Comida>)
 	
+	/**
+	 * Método rellenarComida(Comida, ArrayList<Comida>) rellena los parámetros de una instancia de comida
+	 */
 	public void rellenarComida(Comida comida, ArrayList<Comida> comidas) {
 		Scanner s = new Scanner(System.in);
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -211,5 +214,5 @@ public class Comida extends Producto{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-}
+	} // Cierre del método rellenarComida(Comida, ArrayList<Comida>)
+} //Cierre de la subclase Comida

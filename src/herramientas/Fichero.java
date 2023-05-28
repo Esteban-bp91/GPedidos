@@ -2,7 +2,6 @@ package herramientas;
 
 import java.io.BufferedReader;
 import java.io.EOFException;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -14,7 +13,6 @@ import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import clases.Bebida;
 import clases.Cliente;
@@ -22,20 +20,23 @@ import clases.Comida;
 import clases.Pedido;
 
 /**
- * Clase Fichero de la práctica final de Programación de 1º DAW - Curso 2022/2023
+ * Clase Fichero del software GPedidos
  * 
  * @author Esteban Baeza Pérez
- * @version 0.1 
- * @since 25/04/2023
+ * @version 0.4 
+ * @since 27/05/2023
  * 
  */
-
 public class Fichero {
-	
-	private String rutaFicheros = "C:/Users/EstebanBP/eclipse-workspace/GPedidos/Ficheros";
+	//Parámetros de la clase Fichero con las rutas a los diferentes directorios necesarios
 	private String rutaPedidos = "C:/Users/EstebanBP/eclipse-workspace/GPedidos/Pedidos";
 	private String rutaConfig = "C:/Users/EstebanBP/eclipse-workspace/GPedidos/Ficheros/configuracion.txt";
 	
+	/**
+	 * Método obtenerDatos() para la lectura del archivo de configuracion de la base de datos
+	 * @return un array de 5 valores String con los datos necesarios para la conexion a la base de datos MySQL
+	 * @throws IOException
+	 */
 	public String[] obtenerDatos() throws IOException {
 		String[] datos= new String[5];
 		FileReader fl = null;
@@ -61,154 +62,15 @@ public class Fichero {
 		    }
 		}
 		return datos;
-	}
-	
-	public void guardarBebidas(ArrayList<Bebida> bebidas) throws Exception {
-		FileOutputStream fc = null;
-		ObjectOutputStream oc = null;
-		try {
-			fc = new FileOutputStream(rutaFicheros+"/Bebidas.dat");
-			oc = new ObjectOutputStream(fc);
-			oc.writeObject(bebidas);
-			oc.flush();
-		} catch (EOFException eof) {
-		} catch (FileNotFoundException f){
-			f.printStackTrace();
-			System.out.println("Clientes no encontrados");
-		} finally {
-			if (oc != null) {
-		        oc.close();
-		    }
-		    if (fc != null) {
-		        fc.close();
-		    }
-		}
-	}
-	
-	public void guardarBebida(Bebida bebida, ArrayList<Bebida> bebidas) throws Exception {
-		bebidas.add(bebida);
-		FileOutputStream fc = null;
-		ObjectOutputStream oc = null;
-		try {
-			fc = new FileOutputStream(rutaFicheros+"/Bebidas.dat");
-			oc = new ObjectOutputStream(fc);
-			oc.writeObject(bebidas);
-			oc.flush();
-		} catch (EOFException eof) {
-		} catch (FileNotFoundException f){
-			f.printStackTrace();
-			System.out.println("Clientes no encontrados");
-		} finally {
-			if (oc != null) {
-		        oc.close();
-		    }
-		    if (fc != null) {
-		        fc.close();
-		    }
-		}
-	}
-	
-	@SuppressWarnings("unchecked")
-	public ArrayList<Bebida> cargarBebidas(ArrayList<Bebida> bebidas) throws FileNotFoundException, IOException, ParseException, ClassNotFoundException {
-		FileInputStream fc = null;
-		ObjectInputStream oc = null;
-		try {
-			fc = new FileInputStream(rutaFicheros+"/Bebidas.dat");
-			oc = new ObjectInputStream(fc);
-			bebidas = (ArrayList<Bebida>)oc.readObject(); 
-		} catch (EOFException eof) {
-		} catch (ClassNotFoundException c) {
-			c.printStackTrace();
-			System.out.println("Error en la carga de las bebidas");
-		} catch (FileNotFoundException f){
-			f.printStackTrace();
-			System.out.println("Bebidas no encontradas");
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (oc != null) {
-		        oc.close();
-		    }
-		    if (fc != null) {
-		        fc.close();
-		    }
-		}
-		return bebidas;
-	}
-	
-	public void guardarComidas(ArrayList<Comida> comidas) throws Exception {
-		FileOutputStream fc = null;
-		ObjectOutputStream oc = null;
-		try {
-			fc = new FileOutputStream(rutaFicheros+"/Comidas.dat");
-			oc = new ObjectOutputStream(fc);
-			oc.writeObject(comidas);
-			oc.flush();
-		} catch (EOFException eof) {
-		} catch (FileNotFoundException f){
-			f.printStackTrace();
-			System.out.println("Comidas no encontrados");
-		} finally {
-			if (oc != null) {
-		        oc.close();
-		    }
-		    if (fc != null) {
-		        fc.close();
-		    }
-		}
-	}
-	
-	public void guardarComida(Comida comida, ArrayList<Comida> comidas) throws Exception {
-		comidas.add(comida);
-		FileOutputStream fc = null;
-		ObjectOutputStream oc = null;
-		try {
-			fc = new FileOutputStream(rutaFicheros+"/Comidas.dat");
-			oc = new ObjectOutputStream(fc);
-			oc.writeObject(comidas);
-			oc.flush();
-		} catch (EOFException eof) {
-		} catch (FileNotFoundException f){
-			f.printStackTrace();
-			System.out.println("Comidas no encontrados");
-		} finally {
-			if (oc != null) {
-		        oc.close();
-		    }
-		    if (fc != null) {
-		        fc.close();
-		    }
-		}
-	}
-	
-	@SuppressWarnings("unchecked")
-	public ArrayList<Comida> cargarComidas(ArrayList<Comida> comidas) throws FileNotFoundException, IOException, ParseException, ClassNotFoundException {
-		FileInputStream fc = null;
-		ObjectInputStream oc = null;
-		try {
-			fc = new FileInputStream(rutaFicheros+"/Comidas.dat");
-			oc = new ObjectInputStream(fc);
-			comidas = (ArrayList<Comida>)oc.readObject(); 
-		} catch (ClassNotFoundException c) {
-			c.printStackTrace();
-			System.out.println("Error en la carga de las comidas");
-		} catch (FileNotFoundException f){
-			f.printStackTrace();
-			System.out.println("Comidas no encontradas");
-		} finally {
-			if (oc != null) {
-		        oc.close();
-		    }
-		    if (fc != null) {
-		        fc.close();
-		    }
-		}
-		return comidas;
-	}
-	
+	} //Cierre del Método obtenerDatos()
+
+	/**
+	 * Método imprimirPedido(Pedido) guarda en un fichero .txt los datos del pedido
+	 * @param el pedido a guardar
+	 */
 	public void imprimirPedido(Pedido pedido) {
 		
-		String ruta = rutaPedidos+"/" +pedido.getCodigoPago()+ ".txt";
+		String ruta = rutaPedidos+"/" +pedido.getCodigoPago()+ ".txt"; //El nombre del fichero .txt será el código de pago del pedido
 		FileWriter fichero = null;
 		PrintWriter pw = null;
 		try {
@@ -228,76 +90,5 @@ public class Fichero {
 				e2.printStackTrace();
 			}
 		}
-	}
-	
-	public void guardarClientes(ArrayList<Cliente> clientes) throws Exception {
-		FileOutputStream fc = null;
-		ObjectOutputStream oc = null;
-		try {
-			fc = new FileOutputStream(rutaFicheros+"/Clientes.dat");
-			oc = new ObjectOutputStream(fc);
-			oc.writeObject(clientes);
-			oc.flush();
-		} catch (EOFException eof) {
-		} catch (FileNotFoundException f){
-			f.printStackTrace();
-			System.out.println("Clientes no encontrados");
-		} finally {
-			if (oc != null) {
-		        oc.close();
-		    }
-		    if (fc != null) {
-		        fc.close();
-		    }
-		}
-	}
-	
-	public void guardarCliente(Cliente cli,ArrayList<Cliente> clientes) throws Exception {
-		clientes.add(cli);
-		FileOutputStream fc = null;
-		ObjectOutputStream oc = null;
-		try {
-			fc = new FileOutputStream(rutaFicheros+"/Clientes.dat");
-			oc = new ObjectOutputStream(fc);
-			oc.writeObject(clientes);
-			oc.flush();
-		} catch (EOFException eof) {
-		} catch (FileNotFoundException f){
-			f.printStackTrace();
-			System.out.println("Clientes no encontrados");
-		} finally {
-			if (oc != null) {
-		        oc.close();
-		    }
-		    if (fc != null) {
-		        fc.close();
-		    }
-		}
-	}
-	
-	@SuppressWarnings("unchecked")
-	public ArrayList<Cliente> cargarClientes(ArrayList<Cliente> clientes) throws FileNotFoundException, IOException, ParseException, ClassNotFoundException {
-			FileInputStream fc = null;
-			ObjectInputStream oc = null;
-			try {
-				fc = new FileInputStream(rutaFicheros+"/Clientes.dat");
-				oc = new ObjectInputStream(fc);
-				clientes = (ArrayList<Cliente>)oc.readObject(); 
-			} catch (ClassNotFoundException c) {
-				c.printStackTrace();
-				System.out.println("Error en la carga de los clientes");
-			} catch (FileNotFoundException f){
-				f.printStackTrace();
-				System.out.println("Clientes no encontrados");
-			} finally {
-				if (oc != null) {
-			        oc.close();
-			    }
-			    if (fc != null) {
-			        fc.close();
-			    }
-			}
-		return clientes;
-	}
-
-}
+	} //Cierre del Método imprimirPedido(Pedido)
+} //Cierre de la clase Fichero

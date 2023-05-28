@@ -1,29 +1,27 @@
 package clases;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import menus.CartaBebidas;
 
 /**
- * Clase Bebida de la práctica final de Programación de 1º DAW - Curso 2022/2023
- * 
+ * Subclase Bebida del software GPedidos
+ * Superclase Producto
  * @author Esteban Baeza Pérez
- * @version 0.1 
- * @since 25/04/2023
- * 
+ * @version 0.4
+ * @since 27/05/2023
+ * @see Clase Producto
  */
 
 public class Bebida extends Producto {
-	
+	// Parámetros de la subclase Bebida
 	private boolean gaseoso; //Indica si es un producto con gas o sin gas
 	private boolean lacteo;  //Indica si el producto tiene algún tipo de lácteo
 	private String medida;   //Medida en cc de la bebida
 	
+	//Getters and setters
 	public boolean isGaseoso() {
 		return gaseoso;
 	}
@@ -49,20 +47,37 @@ public class Bebida extends Producto {
 		this.stock = stock;
 	}
 	
-	
+	/**
+	 * Constructor de la subclase Bebida
+	 * @param int codigo identifica la instancia de la bebida
+	 * @param String nombre identifica el nombre de la bebida
+	 * @param double precio especifica el precio de la bebida
+	 * @param LocalDate fecha_caducidad especifica la fecha de la bebida
+	 * @param String estado especifica el estado de la bebida
+	 * @param int cantidad especifica la cantidad de la bebida que tendrá el pedido
+	 * @param boolean gaseoso especifica si la bebida es gaseosa
+	 * @param boolean lacteo especifica si la bebida contiene leche
+	 * @param String medida especifica el volumen de la bebida
+	 */
 	public Bebida(int codigo, String nombre, double precio, LocalDate fecha_caducidad, String estado, int cantidad, boolean gaseoso,
 			boolean lacteo, String medida) {
 		super(codigo, nombre, precio, fecha_caducidad, estado, cantidad);
 		this.gaseoso = gaseoso;
 		this.lacteo = lacteo;
 		this.medida = medida;
-	}
-		
+	} //Cierre del constructor Bebida
+	
+	/**
+	 * Método obtenerCaducidad() imprime por pantalla la fecha de caducidad
+	 */
 	@Override
 	public void obtenerCaducidad() {
 		System.out.println(calcularCaducidad());
-	}
+	} //Cierre del Método obtenerCaducidad()
 	
+	/**
+	 * Método calcularCaducidad() establece la fecha de caducidad de la bebida según contenga leche o no 
+	 */
 	@Override
 	public LocalDate calcularCaducidad() {
 		if(lacteo == true) {
@@ -70,38 +85,20 @@ public class Bebida extends Producto {
 		} else {
 			setFecha_caducidad(LocalDate.now().plusDays(20));
 		}
-	return fecha_caducidad;
-	}
+		return fecha_caducidad;
+	} //Cierre del Método calcularCaducidad()
 	
+	/**
+	 * Método detalleProducto() imprime por pantalla los parámetros de la instancia 
+	 */
 	@Override
 	public void detalleProducto() {
 		System.out.println("Nombre: "+nombre+"\nPrecio: "+precio+"\nFecha de caducidad: "+fecha_caducidad+"\nEstado: "+estado+"\nGaseoso: "+gaseoso+"\nLacteo: "+lacteo+"\nMedida: "+medida);
-	}
+	} //Cierre del Método detalleProducto()
 	
-	
-	public void rellenarBebidatxt(File f, Bebida bebida) {
-		try {
-			Scanner s = new Scanner(f);
-			String linea = s.nextLine();
-			Scanner sl = new Scanner(linea);
-			sl.useDelimiter("\\s*;\\s*");
-			bebida.setCodigo(sl.nextInt());
-			bebida.setNombre(sl.next());
-			bebida.setPrecio(sl.nextDouble());
-			bebida.setEstado(sl.next());
-			bebida.setGaseoso(sl.nextBoolean());
-			bebida.setLacteo(sl.nextBoolean());
-			bebida.setMedida(sl.next());
-			bebida.setFecha_caducidad(bebida.calcularCaducidad());
-			bebida.llenarStock();
-		
-		} catch (FileNotFoundException e) {
-			// PrintWriter pw = null;
-			e.printStackTrace();
-			// e.printStackTrace(pw);
-		}
-	}
-	
+	/**
+	 * Método rellenarBebida(Bebida, ArrayList<Bebida>) rellena los parámetros de una instancia de bebida
+	 */
 	public void rellenarBebida(Bebida bebida, ArrayList<Bebida> bebidas) {
 		Scanner s = new Scanner(System.in);
 		try {
@@ -148,9 +145,13 @@ public class Bebida extends Producto {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
+	} //Cierre del Método rellenarBebida(Bebida, ArrayList<Bebida>)
 	
-	public Bebida elegirBebida(ArrayList<Bebida> bebidas) {  // Método para elegir una bebida
+	/**
+	 * Método elegirBebida(ArrayList<Bebida>) para elegir una bebida del ArrayList
+	 * @return la bebida elegida con la cantidad establecida para el pedido
+	 */
+	public Bebida elegirBebida(ArrayList<Bebida> bebidas) {
 		Bebida bebida = null;
 		Scanner sc = new Scanner(System.in);
 
@@ -192,6 +193,5 @@ public class Bebida extends Producto {
 		}
 		
 		return bebida;
-	}
-
-}
+	} //Cierre del Método elegirBebida(ArrayList<Bebida>)
+} //Cierre de la subclase Bebida
