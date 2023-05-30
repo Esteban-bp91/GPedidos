@@ -2,17 +2,10 @@ package clases;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.text.ParseException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 
 import excepciones.ExcepcionImporte;
-import herramientas.ConexionBD;
 import herramientas.QueryBD;
 import herramientas.Fichero;
 import menus.Menu;

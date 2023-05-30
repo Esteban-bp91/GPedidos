@@ -1,4 +1,5 @@
-package herramientas;
+package test;
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -21,12 +22,12 @@ import excepciones.ExcepcionTelefono;
  * @version 0.4
  * @since 27/05/2023
  */
-public class QueryBD {
+public class QueryBDtest {
 	//Parámetros necesarios para las querys a la base de datos
-	ConexionBD conexion = new ConexionBD();
 	Connection cn = null;
 	Statement stm = null;
 	ResultSet rs = null;
+	TestConexionBD testconexion = new TestConexionBD();
 	
 	private static String insertTableSQL;
 	
@@ -39,7 +40,7 @@ public class QueryBD {
 	 */
 	public ArrayList<Cliente> cargarClientes(ArrayList<Cliente> clientes) throws ExcepcionTelefono, IOException {
 		try {
-			cn = conexion.conectar(); // IMPORTANTE: activar esta conexion para el funcionamiento normal del software
+			cn = testconexion.conectar();  // IMPORTANTE: activar esta conexion para realizar el test JUNIT guardarCliente(Cliente)
 			stm = cn.createStatement();
 			rs = stm.executeQuery("SELECT * FROM cliente");
 				while(rs.next()) {
@@ -77,7 +78,7 @@ public class QueryBD {
 	 * @throws Exception
 	 */
 	public void guardarCliente(Cliente cli) throws Exception {
-		ConexionBD conexion = new ConexionBD();
+		TestConexionBD conexion = new TestConexionBD(); // IMPORTANTE: Usamos esta conexion para los test JUNIT
 		Connection cn = null;
 		PreparedStatement ps = null;
 		insertTableSQL = "INSERT INTO cliente (telefono,nombre,apellidos,fecha_alta,direccion) VALUES (?,?,?,?,?)";
@@ -120,7 +121,7 @@ public class QueryBD {
 	public ArrayList<Bebida> cargarBebidas(ArrayList<Bebida> bebidas) throws ExcepcionTelefono, IOException {
 		try {
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-			cn = conexion.conectar();  // IMPORTANTE: activar esta conexion para el funcionamiento normal del software
+			cn = testconexion.conectar();  // IMPORTANTE: activar esta conexion para realizar el test JUNIT guardarBebida(Bebida)
 			stm = cn.createStatement();
 			rs = stm.executeQuery("SELECT * FROM bebida");
 				while(rs.next()) {
@@ -156,7 +157,7 @@ public class QueryBD {
 	 */
 	public void guardarBebida(Bebida b) throws Exception {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		ConexionBD conexion = new ConexionBD();
+		TestConexionBD conexion = new TestConexionBD(); // IMPORTANTE: Usamos esta conexion a la base de datos testgpedidos para los test JUNIT
 		Connection cn = null;
 		PreparedStatement ps = null;
 		insertTableSQL = "INSERT INTO bebida (codigo, nombre, precio, fecha_caducidad, estado, gaseoso, lacteo, medida) VALUES (?,?,?,?,?,?,?,?)";
@@ -202,7 +203,7 @@ public class QueryBD {
 	public ArrayList<Comida> cargarComidas(ArrayList<Comida> comidas) throws ExcepcionTelefono, IOException {
 		try {
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-			cn = conexion.conectar();  // IMPORTANTE: activar esta conexion para el funcionamiento normal del software
+			cn = testconexion.conectar();  // IMPORTANTE: activar esta conexion para realizar el test JUNIT guardarComida(Comida)
 			stm = cn.createStatement();
 			rs = stm.executeQuery("SELECT * FROM comida");
 				while(rs.next()) {
@@ -237,7 +238,7 @@ public class QueryBD {
 	 */
 	public void guardarComida(Comida c) throws Exception {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		ConexionBD conexion = new ConexionBD();
+		TestConexionBD conexion = new TestConexionBD(); // IMPORTANTE: Usamos esta conexion a la base de datos testgpedidos para los test JUNIT
 		Connection cn = null;
 		PreparedStatement ps = null;
 		insertTableSQL = "INSERT INTO comida (codigo, nombre, precio, fecha_caducidad, estado, perecedero, calorias, vegano, fecha_envase) VALUES (?,?,?,?,?,?,?,?,?)";
@@ -280,20 +281,20 @@ public class QueryBD {
 	 * @throws Exception
 	 */
 	public void guardarPedido(Pedido p) throws Exception {
-		ConexionBD conexion = new ConexionBD();
+		TestConexionBD conexion = new TestConexionBD(); // IMPORTANTE: Usamos esta conexion a la base de datos testgpedidos para los test JUNIT		
 		Connection cn = null;
 		PreparedStatement ps = null;
-		insertTableSQL = "INSERT INTO pedido (num_cliente, cod_bebida,cantidad_bebida,cod_comida,cantidad_comida,importeTotal,codigoPago,estado) VALUES (?,?,?,?,?,?,?,?)";
+		insertTableSQL = "INSERT INTO pedido (codigoPago, num_cliente, cod_bebida,cantidad_bebida,cod_comida,cantidad_comida,importeTotal,estado) VALUES (?,?,?,?,?,?,?,?)";
 		try {
 			cn = conexion.conectar();
 			ps = cn.prepareStatement(insertTableSQL);
-				ps.setInt(1, p.getCliente().getTelefono());
-				ps.setInt(2, p.getBebida().getCodigo());
-				ps.setInt(3, p.getBebida().getCantidad());
-				ps.setInt(4, p.getComida().getCodigo());
-				ps.setInt(5, p.getComida().getCantidad());
-				ps.setDouble(6, p.getImporteTotal());
-				ps.setLong(7, p.getCodigoPago());
+				ps.setLong(1, p.getCodigoPago());
+				ps.setInt(2, p.getCliente().getTelefono());
+				ps.setInt(3, p.getBebida().getCodigo());
+				ps.setInt(4, p.getBebida().getCantidad());
+				ps.setInt(5, p.getComida().getCodigo());
+				ps.setInt(6, p.getComida().getCantidad());
+				ps.setDouble(7, p.getImporteTotal());
 				ps.setString(8, p.getEstado());
 				ps.executeUpdate();
 
